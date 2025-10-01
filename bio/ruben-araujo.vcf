@@ -1,8 +1,10 @@
 BEGIN:VCARD
 VERSION:3.0
 N:Araújo;Rúben;;;
+FN:Rúben Araújo
 TITLE:Engineer, Researcher and Data Scientist
+EMAIL;TYPE=INTERNET:rubenalexandredinisaraujo@gmail.com
 TEL;TYPE=CELL:+351920039670
-EMAIL:rubenalexandredinisaraujo@gmail.com
 URL:https://rubenaraujo.org
 END:VCARD
+
