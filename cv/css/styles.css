@@ -195,27 +195,40 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.bottom-icons img {
-  height: 23px;
-  width: auto;
-  display: block;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 18px;              /* controls horizontal spacing */
 }
 
 .bottom-icons a {
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
+  width: 34px;            /* gives every icon the same “box” */
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;            /* default */
+  opacity: 0.9;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .bottom-icons a:hover {
   opacity: 1;
+  color: var(--accent);
 }
 
-.bottom-icons a:hover img {
-  transform: translateY(-2px);
+.bottom-icons .social-icon {
+  width: 23px;            /* actual icon size */
+  height: 23px;
+  display: block;
+  flex: 0 0 auto;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
+
+.bottom-icons a:hover .social-icon {
+  transform: translateY(-2px) scale(1.08);
+}
+
+
 
 /* ABOUT */
 .about-hero{display:grid;grid-template-columns:180px 1fr;gap:32px;align-items:center;max-width:900px;margin:0 auto 40px;text-align:left}
