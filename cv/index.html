@@ -5,7 +5,10 @@
   <title>Ruben A. D. Araujo</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Cache-busting version parameter:
+     Forces browsers (especially Chrome) to reload updated CSS instead of using a stale cached copy.
+     Increment the version whenever styles.css changes. -->
+  <link rel="stylesheet" href="css/styles.css?v=1">
 </head>
 <body>
 
@@ -60,6 +63,15 @@
       <h1 class="hero">
         Hello. I am Ruben<span id="accent-dot"><input id="accent-picker" type="color" value="#FF0077"></span>
       </h1>
+
+      <!-- HIDDEN BADGE (PRESS & HOLD REVEAL FOR COUNTER) -->
+      <div id="visit-badge" aria-live="polite" hidden>
+        <span class="vb-label">Views</span> <span id="vb-views">–</span>
+        <span class="vb-sep">•</span>
+        <span class="vb-label">Unique</span> <span id="vb-uniques">–</span>
+      </div>
+
+
       <div class="bottom-icons">
         <a class="social-link" href="https://github.com/ruben-ad-araujo" target="_blank" rel="noopener" aria-label="GitHub">
           <!-- GitHub -->
@@ -2510,6 +2522,73 @@ document.getElementById('accent-picker')?.addEventListener('input', e => {
   document.documentElement.style.setProperty('--accent', e.target.value);
 });
 </script>
+
+
+
+<!-- Press-and-hold logic for counter (with Worker fetch) -->
+<script>
+(function(){
+  const badge = document.getElementById("visit-badge");
+  const trigger = document.getElementById("accent-dot");
+  if(!badge || !trigger) return;
+
+  window.__cvCounts = null;
+
+  // Use relative URL on production; absolute fallback when testing locally
+  const isLocal = ["localhost", "127.0.0.1"].includes(location.hostname);
+  const COUNTER_URL = isLocal
+    ? "https://rubenaraujo.org/api/cv-counter/get"
+    : "/api/cv-counter/get";
+
+  fetch(COUNTER_URL, { cache: "no-store" })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if(d) window.__cvCounts = d; })
+    .catch(()=>{});
+
+  let holdTimer = null;
+  let armed = false;
+
+  function renderCounter(data){
+    document.getElementById("vb-views").textContent = String(data.views);
+    document.getElementById("vb-uniques").textContent = String(data.uniques);
+  }
+
+  function showCounterTemporarily(ms){
+    badge.hidden = false;
+    clearTimeout(window.__cvHideT);
+    window.__cvHideT = setTimeout(()=>{ badge.hidden = true; }, ms);
+  }
+
+  trigger.addEventListener("pointerdown", (e) => {
+    if(e.button !== 0) return; // left click only
+
+    armed = true;
+    holdTimer = setTimeout(() => {
+      const data = window.__cvCounts || { views: "–", uniques: "–" };
+      renderCounter(data);
+      showCounterTemporarily(8000);
+      armed = false; // long-press succeeded: block the click
+    }, 1400);
+  });
+
+  function cancelHold(){
+    clearTimeout(holdTimer);
+    holdTimer = null;
+  }
+
+  trigger.addEventListener("pointerup", cancelHold);
+  trigger.addEventListener("pointercancel", cancelHold);
+  trigger.addEventListener("pointerleave", cancelHold);
+
+  // If long-press succeeded, block the click that would open the color picker once
+  trigger.addEventListener("click", (e) => {
+    if(armed) return; // normal short click: allow picker
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+})();
+</script>
+
 
 
 </body>
