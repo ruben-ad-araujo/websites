@@ -2540,10 +2540,11 @@ document.getElementById('accent-picker')?.addEventListener('input', e => {
     ? "https://rubenaraujo.org/api/cv-counter/get"
     : "/api/cv-counter/get";
 
-  fetch(COUNTER_URL, { cache: "no-store" })
+  fetch("/api/cv-counter/hit", { credentials: "include", cache: "no-store" })
     .then(r => r.ok ? r.json() : null)
     .then(d => { if(d) window.__cvCounts = d; })
     .catch(()=>{});
+
 
   let holdTimer = null;
   let armed = false;
