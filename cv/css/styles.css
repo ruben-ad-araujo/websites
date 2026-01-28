@@ -18,6 +18,28 @@
 [title^="Select with ColorPick Eyedropper"]{ display:none !important; }
 
 
+/* badge styling for counter */
+#visit-badge{
+  margin-top: 14px;
+  font-size: 12px;
+  letter-spacing: 0.6px;
+  opacity: 0.85;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: 8px 12px;
+  backdrop-filter: blur(6px);
+  background: rgba(255,255,255,.06);
+  user-select: none;
+}
+
+#visit-badge .vb-label{ opacity: 0.7; }
+#visit-badge .vb-sep{ margin: 0 8px; opacity: 0.5; }
+
+
+
+
+
 html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',sans-serif}
 
 /* Disable smooth scrolling for users who’ve enabled “Reduce motion” in their OS. Everyone else keeps smooth scroll. */
