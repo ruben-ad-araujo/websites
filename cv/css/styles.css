@@ -793,3 +793,262 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 .is-hidden{ display:none !important; }
 
 
+/* ==============================
+   SHOWCASE: filters + carousel
+   ============================== */
+
+.showcase-filters{
+  display:flex;
+  justify-content:center;
+  gap: 18px;
+  margin: 10px 0 18px;
+  flex-wrap: wrap;
+}
+
+.sphere{
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  border: 2px solid var(--accent);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: default; /* no hand icon */
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.sphere img{
+  width: 26px;
+  height: 26px;
+  display:block;
+  transition: filter .15s ease, opacity .15s ease;
+}
+
+/* non-selected look: greyed out */
+.sphere:not(.is-active) img{
+  filter: grayscale(1) brightness(0.9);
+  opacity: 0.75;
+}
+
+/* hover: keep your hover glow + make icon a bit more “alive” */
+.sphere:not(.is-active):hover img{
+  filter: grayscale(0) brightness(1);
+  opacity: 1;
+}
+
+/* selected: show original icon colors, no glow */
+.sphere.is-active{
+  box-shadow: none;
+}
+
+.sphere.is-active img{
+  filter: none;
+  opacity: 1;
+}
+
+.sphere .sphere-label{
+  display:none; /* keep it clean like your PPT mockup */
+}
+
+.sphere:hover{
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.showcase-carousel{
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 64px 1fr 64px;
+  align-items: center;
+  gap: 14px;
+}
+
+.carousel-nav{
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 74px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer; /* default would show no hand icon */
+  transition: transform .15s ease, filter .15s ease;
+  user-select: none;
+}
+
+.carousel-nav:hover{
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
+.carousel{
+  outline: none;
+}
+
+.carousel-viewport{
+  width: 100%;
+}
+
+.carousel-item{
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 50/50 split */
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.carousel-media{
+  min-height: 320px;
+  background: rgba(0,0,0,0.35);
+}
+
+.carousel-media img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display:block;
+}
+
+.carousel-body{
+  background: rgba(255,255,255,0.03);
+  border-left: 1px solid rgba(255,255,255,0.12);
+  display:flex;
+}
+
+.carousel-body-inner{
+  padding: 26px 26px;
+  width: 100%;
+}
+
+.carousel-title{
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+}
+
+.carousel-subtitle{
+  margin: -4px 0 12px 0;   /* pulls it closer to title, then gives space to summary */
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.55); /* medium gray */
+}
+
+.carousel-text{
+  font-size: 15px;
+  line-height: 1.45;
+  opacity: 0.92;
+
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+
+.carousel-dots{
+  display:flex;
+  justify-content:center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.carousel-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,0.35);
+  cursor: pointer; /* with hand icon */
+  transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+}
+
+.carousel-dot:hover{
+  transform: scale(1.12);
+}
+
+.carousel-dot.is-active{
+  background: rgba(255,255,255,0.72);
+  box-shadow: 0 0 0 6px rgba(255,255,255,0.10);
+}
+
+/* keep it “not stretched to infinity” */
+@media (min-width: 1400px){
+  .showcase-carousel{ width: 1100px; }
+}
+
+/* responsive: stack image/text on small screens */
+@media (max-width: 860px){
+  .showcase-carousel{
+    grid-template-columns: 44px 1fr 44px;
+  }
+  .carousel-item{
+    grid-template-columns: 1fr;
+  }
+  .carousel-body{
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .carousel-media{ min-height: 220px; }
+  .carousel-nav{ font-size: 56px; }
+}
+
+/* screen-reader helper */
+.sr-only{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
+
+
+.sphere{
+  position: relative;
+  cursor: pointer; /* important: looks clickable */
+}
+
+.sphere::after{
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  white-space: nowrap;
+
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+  padding: 6px 10px;
+  border-radius: 10px;
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease, transform .12s ease;
+}
+
+.sphere:hover::after{
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* make spheres feel more “button-like” without heavy glow (subtle 3D) */
+.sphere{
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.55), rgba(255,255,255,0) 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,0,0,0.18), rgba(0,0,0,0) 60%);
+  box-shadow:
+    inset 0 1px 6px rgba(255,255,255,0.25),
+    inset 0 -6px 10px rgba(0,0,0,0.10);
+}

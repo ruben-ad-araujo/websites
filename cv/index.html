@@ -2298,13 +2298,75 @@
   <section id="showcase" class="grey-section section">
     <div class="section-inner">
       <h2 class="section-title">SHOWCASE</h2>
-      <p class="section-subtitle">A display of past engineering, software and other works.</p>
+      <p class="section-subtitle">A display of varied engineering expertise, clinical research and finance-oriented skills.</p>
     </div>
-    <!-- Under construction signage -->
-    <div class="under-construction">
-      <img src="images/pikachu_construction.gif" alt="Under Construction">
-      <img src="images/pikachu_construction.gif" alt="Under Construction">
-      <img src="images/pikachu_construction.gif" alt="Under Construction">
+
+    <!-- Category spheres (filters) -->
+    <div class="showcase-filters" aria-label="Showcase categories" role="tablist">
+
+      <button class="sphere is-active"
+              type="button"
+              data-cat="engineering"
+              data-tip="Engineering"
+              role="tab"
+              aria-selected="true">
+        <img src="images/engineering_sphere.png" alt="" aria-hidden="true">
+        <span class="sphere-label">Engineering</span>
+      </button>
+
+      <button class="sphere"
+              type="button"
+              data-cat="biomedicine"
+              data-tip="Research"
+              role="tab"
+              aria-selected="false">
+        <img src="images/research_sphere.png" alt="" aria-hidden="true">
+        <span class="sphere-label">Biomedicine</span>
+      </button>
+
+      <button class="sphere"
+              type="button"
+              data-cat="finance"
+              data-tip="Finance"
+              role="tab"
+              aria-selected="false">
+        <img src="images/finance_sphere.png" alt="" aria-hidden="true">
+        <span class="sphere-label">Finance</span>
+      </button>
+
+    </div>
+
+
+    <!-- Carousel -->
+    <div class="showcase-carousel" tabindex="0" aria-label="Project carousel">
+  
+      <button class="carousel-nav prev" type="button" aria-label="Previous item">‹</button>
+
+      <div class="carousel" id="showcase-carousel" tabindex="0">
+        <div class="carousel-viewport">
+          <a class="carousel-item" id="carousel-item" href="#" aria-label="Open project section">
+            <div class="carousel-media">
+              <img id="carousel-img" src="images/pikachu_construction.gif" alt="">
+            </div>
+
+            <div class="carousel-body">
+              <div class="carousel-body-inner">
+                <h3 class="carousel-title" id="carousel-title">Title</h3>
+                <div class="carousel-subtitle" id="carousel-subtitle" hidden></div>
+                <div class="carousel-text" id="carousel-text">...</div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- dots -->
+        <div class="carousel-dots" id="carousel-dots" aria-label="Slide selector"></div>
+
+        <!-- optional (kept for screen readers / debugging) -->
+        <span class="sr-only" id="carousel-count">0 / 0</span>
+      </div>
+
+      <button class="carousel-nav next" type="button" aria-label="Next item">›</button>
     </div>
   </section>
 
@@ -2314,7 +2376,7 @@
   <section id="interests" class="white-section section">
     <div class="section-inner">
       <h2 class="section-title">INTERESTS</h2>
-      <p class="section-subtitle">Personal Pursuits and Skills.</p>
+      <p class="section-subtitle">Personal Pursuits.</p>
     </div>
     <!-- Under construction signage -->
     <div class="under-construction">
@@ -2323,19 +2385,6 @@
       <img src="images/pikachu_construction.gif" alt="Under Construction">
     </div>
   </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!-- Footer -->
   <div class="bottom-container">
@@ -2594,3 +2643,332 @@ document.getElementById('accent-picker')?.addEventListener('input', e => {
 
 </body>
 </html>
+
+
+<!-- ========================================= -->
+<!-- SHOWCASE CAROUSEL (standalone script)     -->
+<!-- ========================================= -->
+<script>
+/*
+  Showcase carousel
+  - pure frontend
+  - no frameworks
+  - no dependencies
+  - NOT inside any other <script>
+  - NOT inside an IIFE
+*/
+
+/* DATA MODEL (fill these) */
+  // Example (edit/delete):
+  // {
+  //   id: "eng-1",
+  //   category: "engineering",              // engineering | biomedicine | finance
+  //   title: "Project title",
+  //   summaryHtml: "Short <b>HTML</b> summary here.",
+  //   img: "images/your_image.png",
+  //   imgAlt: "Optional alt text",
+  //   anchor: "#some-anchor-on-this-page"
+  // },
+
+const CAROUSEL_ITEMS = [
+  {
+    id: "eng-1",
+    category: "engineering",
+    title: "Siemens Energy",
+    subtitle: "Mechanical Design Engineer – DT/ LDT Systems",
+    summaryHtml: "Mechanical design of distribution and power transformers, including ATEX units for the petrochemical industry. Led projects from concept to final inspection, contributing to R&D and prototype development using FEM and thermodynamic analysis.",
+    img: "images/siemens.png",
+    imgAlt: "Engineering preview",
+    anchor: "#"
+  },
+
+  {
+    id: "eng-2",
+    category: "engineering",
+    title: "Aker Solutions",
+    subtitle: "Product & Project Engineer – Offshore Mechanical Systems",
+    summaryHtml: "Lead mechanical design of offshore pipe handling systems, acting as main designer across product development and project execution. Responsible for standards-compliant design, supplier coordination, FAT/SAT testing, and on-site commissioning in Norway and Poland.",
+    img: "images/akersolutions.png",
+    imgAlt: "Engineering preview",
+    anchor: "#"
+  },
+
+  {
+    id: "eng-3",
+    category: "engineering",
+    title: "MH Wirth (now HMH)",
+    subtitle: "Life Cycle Engineer – Offshore Drilling Systems",
+    summaryHtml: "Supported offshore drilling operations through life-cycle engineering, coordinating with rig managers and service teams, performing critical analyses, managing maintenance actions, and contributing to work packages and technical quotations.",
+    img: "images/mhwirth.png",
+    imgAlt: "Engineering preview",
+    anchor: "#"
+  },
+
+  {
+    id: "eng-4",
+    category: "engineering",
+    title: "Brøvig",
+    subtitle: "Lead Mechanical Engineer – Industrial Machinery & Layout",
+    summaryHtml: "Led mechanical design and manufacturing documentation for industrial equipment, overseeing fabrication and assembly, mentoring engineers, and driving R&D and continuous improvement across 2D/3D plant layouts.",
+    img: "images/brovig.png",
+    imgAlt: "Engineering preview",
+    anchor: "#"
+  },
+
+  {
+    id: "bio-1",
+    category: "biomedicine",
+    title: "Clinical & Translational Laboratory Expertise",
+    subtitle: "Human samples • Protocols • High-throughput workflows",
+    summaryHtml: "Hands-on experience with human biospecimens, from whole blood collection to serum/plasma separation, cryopreservation, and downstream analytical workflows. Established and optimized laboratory protocols under clinical research constraints, ensuring reproducibility, biosafety, and regulatory compliance.",
+    img: "images/laboratory.png",
+    imgAlt: "Biomedical preview",
+    anchor: "#"
+  },
+
+  {
+    id: "bio-2",
+    category: "biomedicine",
+    title: "Clinical Research & Human Studies",
+    subtitle: "ICU research • Multicenter collaboration",
+    summaryHtml: "Direct involvement in clinical research with ICU patients, including study design support, patient recruitment workflows, ethical approvals, data governance, and coordination with hospitals and research institutions. Experienced in operating within multidisciplinary clinical environments.",
+    img: "images/clinical.png",
+    imgAlt: "Biomedical preview",
+    anchor: "#"
+  },
+
+  {
+    id: "bio-3",
+    category: "biomedicine",
+    title: "Advanced Analytical & Omics Technologies",
+    subtitle: "Metabolomics • Proteomics",
+    summaryHtml: "Applied advanced analytical techniques including FTIR spectroscopy (MIR/NIR), LC-MS/MS, and multiplex cytokine assays for biomarker discovery in clinical and translational research. Experience with high-throughput platforms and standardized analytical pipelines.",
+    img: "images/omics.png",
+    imgAlt: "Biomedical preview",
+    anchor: "#"
+  },
+
+  {
+    id: "bio-4",
+    category: "biomedicine",
+    title: "Clinical Data Science & Modeling",
+    subtitle: "ETL & Data Curation • ML & Statistical Modeling • Python workflows",
+    summaryHtml: "End-to-end data science applied to complex biomedical and clinical datasets, including ETL pipelines, data cleaning, normalization, and quality control. Design and implementation of statistical and machine-learning models for classification, risk stratification, and outcome prediction (e.g., infection status, disease severity, mortality). Development of custom Python-based analytical tools and reproducible workflows to support large-scale data analysis and decision-oriented research.",
+    img: "images/modeling.png",
+    imgAlt: "Biomedical preview",
+    anchor: "#"
+  },
+
+  {
+    id: "bio-5",
+    category: "biomedicine",
+    title: "Research Leadership, Publishing & Grant Activity",
+    subtitle: "Publications • Funding • Team collaboration",
+    summaryHtml: "Experienced contributor to funded research projects, peer-reviewed publications, and grant documentation. First- and co-author across multidisciplinary studies, with experience mentoring MSc students and collaborating with PhD researchers and senior investigators.",
+    img: "images/researcher.png",
+    imgAlt: "Biomedical preview",
+    anchor: "#"
+  },
+  
+  {
+    id: "fin-1",
+    category: "finance",
+    title: "Risk-Adjusted Performance Analysis",
+    subtitle: "Sharpe • Sortino • Drawdown • Volatility",
+    summaryHtml: "Quantitative evaluation of asset and strategy performance using risk-adjusted metrics. Analysis of return distributions, downside risk, drawdowns, and volatility to compare strategies beyond raw returns and support risk-aware decision-making.",
+    img: "images/riskadjusted.png",
+    imgAlt: "Finance preview",
+    anchor: "#"
+  },
+
+  {
+    id: "fin-2",
+    category: "finance",
+    title: "Portfolio Analysis & Diversification",
+    subtitle: "Correlation • Exposure • Rebalancing",
+    summaryHtml: "Portfolio-level analysis focused on diversification benefits, correlation structure, and exposure management. Evaluation of asset interactions and rebalancing effects on overall portfolio risk and stability.",
+    img: "images/portfolio.png",
+    imgAlt: "Finance preview",
+    anchor: "#"
+  },
+  
+  {
+    id: "fin-3",
+    category: "finance",
+    title: "Time-Series Analysis & Signal Evaluation",
+    subtitle: "Trends • Regimes • Predictive Signals",
+    summaryHtml: "Exploration of time-dependent financial data to identify trends, regime changes, and predictive signals. Application of statistical and machine-learning methods to assess signal stability and robustness over time.",
+    img: "images/timeseries.png",
+    imgAlt: "Finance preview",
+    anchor: "#"
+  },
+
+  {
+    id: "fin-4",
+    category: "finance",
+    title: "Strategy Backtesting & Robustness Analysis",
+    subtitle: "Backtesting • Sensitivity • Validation",
+    summaryHtml: "Systematic evaluation of quantitative strategies using backtesting and robustness checks. Analysis of parameter sensitivity, stability across market conditions, and performance degradation under stress scenarios.",
+    img: "images/backtesting.png",
+    imgAlt: "Finance preview",
+    anchor: "#"
+  },
+
+  {
+    id: "fin-5",
+    category: "finance",
+    title: "Quantitative Decision Support",
+    subtitle: "Risk-Informed • Actionable Insights",
+    summaryHtml: "Translation of quantitative outputs into clear, risk-informed insights to support human decision-making. Focus on interpretability, uncertainty awareness, and actionable summaries rather than reliance on opaque black-box outputs.",
+    img: "images/quantitativedecision.png",
+    imgAlt: "Finance preview",
+    anchor: "#"
+  },
+
+  {
+    id: "fin-6",
+    category: "finance",
+    title: "Reinforcement Learning for Sequential Decision Problems",
+    subtitle: "Q-Learning • Policy Optimization • Model Limitations",
+    summaryHtml: "Design, training, and evaluation of reinforcement learning agents for sequential decision-making under uncertainty. Applied Q-learning and policy-based approaches to controlled environments, with emphasis on reward design, exploration–exploitation trade-offs, overfitting risks, and performance plateaus. Critical assessment of where RL is appropriate versus traditional statistical and machine-learning methods.",
+    img: "images/reinforcementlearning.png",
+    imgAlt: "Finance preview",
+    anchor: "#"
+  }
+];
+
+
+/* STATE */
+let activeCategory = 'engineering';
+let activeItems = [];
+let currentIndex = 0;
+
+/* DOM */
+const carouselEl   = document.getElementById('showcase-carousel');
+const itemLinkEl   = document.getElementById('carousel-item');
+const imgEl        = document.getElementById('carousel-img');
+const titleEl      = document.getElementById('carousel-title');
+const subtitleEl   = document.getElementById('carousel-subtitle');
+const textEl       = document.getElementById('carousel-text');
+const countEl      = document.getElementById('carousel-count');
+const dotsEl       = document.getElementById('carousel-dots');
+
+const prevBtn = document.querySelector('.carousel-nav.prev');
+const nextBtn = document.querySelector('.carousel-nav.next');
+const spheres = document.querySelectorAll('.sphere');
+
+function setCategory(category) {
+  activeCategory = category;
+  activeItems = CAROUSEL_ITEMS.filter(i => i.category === category);
+  currentIndex = 0;
+  rebuildDots();
+  render();
+}
+
+function rebuildDots() {
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+
+  for (let i = 0; i < activeItems.length; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'carousel-dot';
+    b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+
+    b.addEventListener('click', () => {
+      currentIndex = i;
+      render();
+      carouselEl.focus();
+    });
+
+    dotsEl.appendChild(b);
+  }
+}
+
+function setActiveDot() {
+  if (!dotsEl) return;
+  const dots = dotsEl.querySelectorAll('.carousel-dot');
+  dots.forEach((d, i) => d.classList.toggle('is-active', i === currentIndex));
+}
+
+
+function render() {
+  if (!activeItems.length) {
+    itemLinkEl.href = '#';
+    imgEl.src = 'images/pikachu_construction.gif';
+    imgEl.alt = '';
+    titleEl.textContent = 'No items yet';
+    textEl.innerHTML = 'Add items to <code>CAROUSEL_ITEMS</code> for this category.';
+
+    // subtitle off in empty state
+    subtitleEl.textContent = '';
+    subtitleEl.hidden = true;
+
+    if (countEl) countEl.textContent = '0 / 0';
+    if (dotsEl) dotsEl.innerHTML = '';
+    return;
+  }
+
+  const item = activeItems[currentIndex];
+
+  itemLinkEl.href = item.anchor || '#';
+  imgEl.src = item.img || '';
+  imgEl.alt = item.imgAlt || '';
+  titleEl.textContent = item.title || '';
+  textEl.innerHTML = item.summaryHtml || '';
+  if (countEl) countEl.textContent = (currentIndex + 1) + ' / ' + activeItems.length;
+
+  // subtitle on/off per item
+  const sub = (item.subtitle || '').trim();
+  subtitleEl.textContent = sub;
+  subtitleEl.hidden = !sub;
+
+  setActiveDot();
+}
+
+
+
+function next() {
+  if (!activeItems.length) return;
+  currentIndex = (currentIndex + 1) % activeItems.length;
+  render();
+  carouselEl.focus();
+}
+
+function prev() {
+  if (!activeItems.length) return;
+  currentIndex = (currentIndex - 1 + activeItems.length) % activeItems.length;
+  render();
+  carouselEl.focus();
+}
+
+
+/* EVENTS */
+if (prevBtn) prevBtn.addEventListener('click', prev);
+if (nextBtn) nextBtn.addEventListener('click', next);
+
+if (carouselEl) {
+  carouselEl.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+}
+
+spheres.forEach(btn => {
+  btn.addEventListener('click', () => {
+    spheres.forEach(b => {
+      b.classList.remove('is-active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('is-active');
+    btn.setAttribute('aria-selected', 'true');
+    setCategory(btn.dataset.cat);
+    
+    /* TO CHANGE FOCUS IMMEDIATELY TO THE CAROUSEL AFTER CLICKING A SPHERE - TO USE KEYBOARD */
+    carouselEl.focus();
+  });
+});
+
+/* INIT */
+setCategory(activeCategory);
+</script>
