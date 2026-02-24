@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ruben Araujo | Hub</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/root.css" />
+</head>
+
+<body>
+  <main class="page">
+    <section class="hub" aria-label="Main navigation hub">
+      <div class="hub-wrap" id="hubWrap">
+
+        <!-- Center panel -->
+        <div class="hub-center" aria-live="polite" aria-atomic="true">
+          <div class="hub-center-inner">
+            <h1 class="hub-title" id="hubTitle">Select a section</h1>
+            <p class="hub-desc" id="hubDesc">Hover with a mouse or tap on touch devices to preview, then open the section.</p>
+          </div>
+        </div>
+
+        <!-- Radial items -->
+        <div class="radial" id="radial" role="navigation" aria-label="Sections">
+        <a class="wedge"
+            href="/bio"
+            data-title="Bio"
+            data-desc="Short profile, background, and contact info."
+            aria-label="Open Bio">
+            <span class="wedge-layers" aria-hidden="true"></span>
+            <span class="wedge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Zm0 2c-4.2 0-7.5 2.1-7.5 4.8V21h15v-2.2C19.5 16.1 16.2 14 12 14Z"/></svg>
+            </span>
+        </a>
+
+        <a class="wedge"
+            href="/cv"
+            data-title="CV"
+            data-desc="Full online CV: experience, publications, skills, and downloads."
+            aria-label="Open CV">
+            <span class="wedge-layers" aria-hidden="true"></span>
+            <span class="wedge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6V2Zm8 1.5V7h3.5L14 3.5ZM8 10h8v2H8v-2Zm0 4h8v2H8v-2Zm0 4h6v2H8v-2Z"/></svg>
+            </span>
+        </a>
+
+        <a class="wedge"
+            href="/education"
+            data-title="Education"
+            data-desc="Courses, learning resources, and structured material (coming soon)."
+            aria-label="Open Education">
+            <span class="wedge-layers" aria-hidden="true"></span>
+            <span class="wedge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm-6.5 9.2V15c0 1.66 3 3 6.5 3s6.5-1.34 6.5-3v-2.8L12 15 5.5 12.2Z"/></svg>
+            </span>
+        </a>
+
+        <a class="wedge"
+            href="/finance"
+            data-title="Finance"
+            data-desc="Quant projects, dashboards, and experiments (coming soon)."
+            aria-label="Open Finance">
+            <span class="wedge-layers" aria-hidden="true"></span>
+            <span class="wedge-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19h16v2H2V3h2v16Zm3-2V9h3v8H7Zm5 0V5h3v12h-3Zm5 0v-6h3v6h-3Z"/></svg>
+            </span>
+        </a>
+        </div>
+
+
+      <p class="hub-instructions" id="hubInstructions"></p>
+    </section>
+
+    <!-- Footer exactly as your /cv -->
+    <div class="bottom-container">
+      <p class="copyright">
+        © Copyright | <span id="year"></span> Design by <strong>Ruben Araujo</strong>.
+      </p>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  <script src="js/root.js" defer></script>
+</body>
+</html>
