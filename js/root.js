@@ -1,6 +1,5 @@
 (() => {
   const radial = document.getElementById("radial");
-  const hubWrap = document.getElementById("hubWrap");
   const hubTitle = document.getElementById("hubTitle");
   const hubDesc = document.getElementById("hubDesc");
   const hubInstructions = document.getElementById("hubInstructions");
@@ -49,7 +48,6 @@
   }
 
   // ---- Geometry for clipping + icon placement ----
-
   function polarToPct(angleRad, radiusPct) {
     const x = 50 + Math.cos(angleRad) * radiusPct;
     const y = 50 + Math.sin(angleRad) * radiusPct;
@@ -81,15 +79,22 @@
     state.rInner = R * 0.58;
   }
 
+  function cssVarNumber(name, fallback) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+  }
+
   function layout() {
     const n = items.length;
 
-    const gapDeg = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--gap-deg")) || 6;
+    const gapDeg = cssVarNumber("--gap-deg", 6);
     const gapRad = (gapDeg * Math.PI) / 180;
 
-    const outerR = 49.0;
-    const innerR = 29.0;
-    const iconR = 39.0;
+    // Read from CSS so design changes are one-place
+    const outerR = cssVarNumber("--outer-r", 49.0);
+    const innerR = cssVarNumber("--inner-r", 29.0);
+    const iconR  = cssVarNumber("--icon-r", 39.0);
 
     for (let i = 0; i < n; i++) {
       const startDeg = -90 + (i * 360) / n;
@@ -102,11 +107,17 @@
       el.style.clipPath = donutSectorPolygon(startRad, endRad, outerR, innerR, 22);
 
       const midRad = (startRad + endRad) / 2;
+      
+
       const icon = el.querySelector(".wedge-icon");
       if (icon) {
         const x = Math.cos(midRad) * iconR;
         const y = Math.sin(midRad) * iconR;
-        icon.style.transform = `translate(calc(-50% + ${x.toFixed(3)}%), calc(-50% + ${y.toFixed(3)}%))`;
+
+        // position relative to the parent (correct), keep CSS transform for centering
+        icon.style.left = `calc(50% + ${x.toFixed(3)}%)`;
+        icon.style.top  = `calc(50% + ${y.toFixed(3)}%)`;
+        icon.style.transform = "translate(-50%, -50%)";
       }
     }
 
@@ -147,9 +158,7 @@
 
     radial.addEventListener("pointerleave", () => setHover(null));
 
-    // IMPORTANT: no JS click navigation here.
-    // Links (<a href="...">) handle left/middle/right click naturally.
-
+    // Links (<a href>) handle left/middle/right click naturally.
     if (items[0]) setSelection(0);
   }
 
@@ -176,7 +185,7 @@
     if (items[0]) setSelection(0);
   }
 
-  // Keyboard
+  // Keyboard: arrows only (no Enter/Space)
   document.addEventListener("keydown", (e) => {
     if (!items.length) return;
 
@@ -190,10 +199,6 @@
       const i = (state.selectedIndex - 1 + items.length) % items.length;
       setSelection(i);
       items[i].focus({ preventScroll: true });
-    } else if (e.key === "Enter" || e.key === " ") {
-      const el = items[state.selectedIndex];
-      const href = el?.getAttribute("href");
-      if (href) window.location.href = href;
     }
   });
 })();

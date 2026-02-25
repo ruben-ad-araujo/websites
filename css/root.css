@@ -6,26 +6,28 @@
 
   --ring-size: min(560px, 92vw);
 
-  /* Main donut thickness + inner accent thickness */
-  --t-main: 17%;       /* main donut ring thickness */
-  --t-accent: 3.2%;    /* thin inner accent ring thickness */
+  /* Geometry */
+  --gap-deg: 6;                 /* angular gap between sectors */
+  --inner-r: 22;                /* % radius for inner cut (JS also uses this) */
+  --outer-r: 47;                /* % radius for outer edge (JS also uses this) */
+  --icon-r: 27.5;                 /* % radius for icon placement (JS also uses this) */
 
-  /* Gap between wedges */
-  --gap-deg: 6;
+  /* Axln-like translucency feel */
+  --idle-inner: rgba(199,134,71,0.34);  /* stronger near inner edge */
+  --idle-outer: rgba(199,134,71,0.10);  /* fades outward */
+  --active-inner: rgba(255,255,255,0.34);
+  --active-outer: rgba(255,255,255,0.10);
 
-  /* Colors (easy to tweak) */
-  --idle-main: rgba(199, 134, 71, 0.18);      /* faded orange/brown */
-  --active-main: rgba(255,255,255,0.16);      /* faded white */
-  --idle-edge: rgba(199, 134, 71, 0.26);
-  --active-edge: rgba(255,255,255,0.55);
+  --edge-idle: rgba(255,255,255,0.10);
+  --edge-active: rgba(255,255,255,0.22);
 
-  /* Accent ring (inner thin) */
-  --accent: rgba(199, 134, 71, 0.92);
+  /* Thin inner accent when selected */
+  --accent: rgba(199,134,71,0.92);
+  --accent-thickness: 1.7;      /* % radius thickness (visual only) */
 
   --icon: rgba(255,255,255,0.92);
 
   --hub-bg: rgba(0,0,0,0.55);
-  --hub-border: rgba(255,255,255,0.14);
 }
 
 *{box-sizing:border-box}
@@ -56,12 +58,11 @@ body{
 
 /* Center */
 .hub-center{
+  pointer-events: none;
   position:absolute;
-  inset: 20%;
+  inset: 32%;
   border-radius:50%;
-  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.06), transparent 55%),
-              var(--hub-bg);
-  border: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.06), transparent 55%), var(--hub-bg);
   box-shadow: 0 0 0 1px rgba(0,0,0,0.5) inset;
   display:flex;
   align-items:center;
@@ -73,7 +74,7 @@ body{
 
 .hub-title{
   margin:0 0 10px 0;
-  font-size: clamp(20px, 2.6vw, 28px);
+  font-size: clamp(18px, 2.2vw, 26px);
   line-height:1.15;
   font-weight:700;
   color: var(--title);
@@ -81,12 +82,12 @@ body{
 
 .hub-desc{
   margin:0;
-  font-size: clamp(13px, 1.9vw, 15px);
+  font-size: clamp(12px, 1.6vw, 14px);
   line-height:1.5;
   color: var(--desc);
 }
 
-/* Radial */
+/* Radial container */
 .radial{
   position:absolute;
   inset:0;
@@ -94,8 +95,7 @@ body{
   z-index: 2;
 }
 
-
-/* Each wedge is clipped by JS to sector shape (hit area correct) */
+/* Wedges are clipped by JS */
 .wedge{
   position:absolute;
   inset:0;
@@ -113,47 +113,55 @@ body{
   inset:0;
   border-radius:50%;
   pointer-events:none;
-}
 
-/* MAIN donut + INNER accent donut.
-   - main changes color idle->active on hover/selected
-   - accent only shows for selected wedge */
-.wedge-layers{
-  --main: var(--idle-main);
-  --edge: var(--idle-edge);
-  --accentOn: 0; /* 0 or 1, toggled by .is-selected */
+  /* defaults (idle) */
+  --fillInner: var(--idle-inner);
+  --fillOuter: var(--idle-outer);
+  --edge: var(--edge-idle);
+  --accentOn: 0;
 
+  /* Axln-like sector body:
+     - translucent fill
+     - stronger near inner edge
+     - fades to outer edge
+     - subtle inner/outer edge lines */
   background:
-    /* inner accent ring (thin, only visible when selected via opacity stop trick) */
+    /* inner accent ring only when selected */
     radial-gradient(circle,
-      transparent 0 calc(50% - var(--t-accent)),
-      rgba(199,134,71, calc(var(--accentOn) * 0.92)) calc(50% - var(--t-accent)) 50%,
-      transparent 50% 100%
+      transparent 0 calc(var(--inner-r) * 1% - var(--accent-thickness) * 1%),
+      rgba(199,134,71, calc(var(--accentOn) * 0.92)) calc(var(--inner-r) * 1% - var(--accent-thickness) * 1%) calc(var(--inner-r) * 1%),
+      transparent calc(var(--inner-r) * 1%) 100%
     ),
-    /* main donut ring */
+
+    /* main wedge fill (inner strong -> outer faded) */
     radial-gradient(circle,
-      transparent 0 calc(50% - var(--t-main)),
-      var(--main) calc(50% - var(--t-main)) 50%,
-      transparent 50% 100%
+      transparent 0 calc(var(--inner-r) * 1%),
+      var(--fillInner) calc(var(--inner-r) * 1%),
+      var(--fillOuter) calc(var(--outer-r) * 1%),
+      transparent calc(var(--outer-r) * 1%) 100%
     );
 
+  /* subtle edge definition + soft depth */
   box-shadow:
     0 0 0 1px var(--edge) inset,
-    0 26px 48px rgba(0,0,0,0.42);
-  transition: box-shadow .09s linear, filter .09s linear, background .09s linear;
+    0 20px 44px rgba(0,0,0,0.42);
+
+  transition: filter .10s linear, background .10s linear, box-shadow .10s linear;
 }
 
-/* Hover = active main */
+/* Hover */
 .wedge.is-hover .wedge-layers{
-  --main: var(--active-main);
-  --edge: var(--active-edge);
-  filter: brightness(1.02);
+  --fillInner: var(--active-inner);
+  --fillOuter: var(--active-outer);
+  --edge: var(--edge-active);
+  filter: brightness(1.04);
 }
 
-/* Selected = active main + accent visible */
+/* Selected */
 .wedge.is-selected .wedge-layers{
-  --main: var(--active-main);
-  --edge: var(--active-edge);
+  --fillInner: var(--active-inner);
+  --fillOuter: var(--active-outer);
+  --edge: var(--edge-active);
   --accentOn: 1;
 }
 
@@ -172,6 +180,10 @@ body{
   pointer-events:none;
 }
 
+.wedge-icon svg path{
+  fill: var(--icon);
+}
+
 .wedge-icon svg,
 .wedge-icon img{
   width: 40px;
@@ -184,7 +196,7 @@ body{
 .hub-instructions{
   position: absolute;
   left: 50%;
-  top: calc(100% + 14px); /* just below the circular widget */
+  top: calc(100% + 14px);
   transform: translateX(-50%);
   margin: 0;
   font-size: 12px;
@@ -202,6 +214,6 @@ body{
 .copyright{color:#EAF6F6;font-size:.75rem;padding:5px 0}
 
 @media (max-width:520px){
-  :root{ --ring-size: min(460px, 94vw); --t-main: 16%; --t-accent: 3%; }
+  :root{ --ring-size: min(460px, 94vw); }
   .wedge-icon svg, .wedge-icon img{ width:36px; height:36px; }
 }
