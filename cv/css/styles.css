@@ -904,8 +904,22 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
   box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
+.carousel-item{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  height: 420px; /* fixed card height */
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
 .carousel-media{
-  min-height: 320px;
+  height: 420px; /* same as card height */
   background: rgba(0,0,0,0.35);
 }
 
@@ -987,15 +1001,24 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
   .showcase-carousel{
     grid-template-columns: 44px 1fr 44px;
   }
+
   .carousel-item{
     grid-template-columns: 1fr;
+    height: auto;
   }
+
+  .carousel-media{
+    height: 260px;
+  }
+
   .carousel-body{
     border-left: none;
     border-top: 1px solid rgba(255,255,255,0.12);
   }
-  .carousel-media{ min-height: 220px; }
-  .carousel-nav{ font-size: 56px; }
+
+  .carousel-nav{
+    font-size: 56px;
+  }
 }
 
 /* screen-reader helper */
