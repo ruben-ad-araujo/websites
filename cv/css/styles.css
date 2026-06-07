@@ -859,7 +859,7 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 
 .showcase-carousel{
   width: min(1100px, 92vw);
-  margin: 0 auto;
+  margin: 0 auto 64px;
   display: grid;
   grid-template-columns: 64px 1fr 64px;
   align-items: center;
@@ -873,7 +873,7 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
   font-size: 74px;
   line-height: 1;
   padding: 0;
-  cursor: pointer; /* default would show no hand icon */
+  cursor: pointer;
   transition: transform .15s ease, filter .15s ease;
   user-select: none;
 }
@@ -893,22 +893,9 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 
 .carousel-item{
   display: grid;
-  grid-template-columns: 1fr 1fr; /* 50/50 split */
-  width: 100%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 18px;
-  overflow: hidden;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-}
-
-.carousel-item{
-  display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
-  height: 420px; /* fixed card height */
+  height: 420px;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 18px;
@@ -919,26 +906,32 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 }
 
 .carousel-media{
-  height: 420px; /* same as card height */
+  height: 100%;
+  min-height: 0;
   background: rgba(0,0,0,0.35);
+  overflow: hidden;
 }
 
 .carousel-media img{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display:block;
+  display: block;
 }
 
 .carousel-body{
+  height: 100%;
+  min-height: 0;
   background: rgba(255,255,255,0.03);
   border-left: 1px solid rgba(255,255,255,0.12);
-  display:flex;
+  display: flex;
+  overflow: hidden;
 }
 
 .carousel-body-inner{
   padding: 26px 26px;
   width: 100%;
+  overflow: hidden;
 }
 
 .carousel-title{
@@ -948,28 +941,27 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 }
 
 .carousel-subtitle{
-  margin: -4px 0 12px 0;   /* pulls it closer to title, then gives space to summary */
+  margin: -4px 0 12px 0;
   font-size: 14px;
   font-weight: 600;
-  color: rgba(0,0,0,0.55); /* medium gray */
+  color: rgba(0,0,0,0.55);
 }
 
 .carousel-text{
   font-size: 15px;
   line-height: 1.45;
   opacity: 0.92;
-
   text-align: justify;
   text-justify: inter-word;
   hyphens: auto;
 }
 
-
 .carousel-dots{
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 22px;
+  margin-bottom: 18px;
 }
 
 .carousel-dot{
@@ -978,7 +970,7 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
   border-radius: 999px;
   border: none;
   background: rgba(255,255,255,0.35);
-  cursor: pointer; /* with hand icon */
+  cursor: pointer;
   transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
 }
 
@@ -993,13 +985,16 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 
 /* keep it “not stretched to infinity” */
 @media (min-width: 1400px){
-  .showcase-carousel{ width: 1100px; }
+  .showcase-carousel{
+    width: 1100px;
+  }
 }
 
 /* responsive: stack image/text on small screens */
 @media (max-width: 860px){
   .showcase-carousel{
     grid-template-columns: 44px 1fr 44px;
+    margin-bottom: 56px;
   }
 
   .carousel-item{
@@ -1009,17 +1004,29 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 
   .carousel-media{
     height: 260px;
+    min-height: 0;
   }
 
   .carousel-body{
+    height: auto;
     border-left: none;
     border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .carousel-body-inner{
+    overflow: visible;
   }
 
   .carousel-nav{
     font-size: 56px;
   }
+
+  .carousel-dots{
+    margin-top: 18px;
+    margin-bottom: 24px;
+  }
 }
+
 
 /* screen-reader helper */
 .sr-only{

@@ -8,7 +8,7 @@
   <!-- Cache-busting version parameter:
      Forces browsers (especially Chrome) to reload updated CSS instead of using a stale cached copy.
      Increment the version whenever styles.css changes. -->
-  <link rel="stylesheet" href="css/styles.css?v=1">
+  <link rel="stylesheet" href="css/styles.css?v=2">
 </head>
 <body>
 
@@ -2620,7 +2620,7 @@
       const loop  = viewer.dataset.loop === 'true'; // optional: set data-loop="true"
 
       let idx = 0;
-      const setSrc = () => { if (files[idx]) frame.src = files[idx] + '#view=Fit'; };
+      const setSrc = () => { if (files[idx]) frame.src = files[idx] + '#view=Fit&zoom=page-fit'; };
 
       if (files.length <= 1) {
         // single-PDF mode: hide nav
