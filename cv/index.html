@@ -59,10 +59,20 @@
     </nav>
     <!-- NAV BAR CODE ENDS HERE -->
 
+
+
     <div class="home-inner">
       <h1 class="hero">
-        Hello. I am Ruben<span id="accent-dot"><input id="accent-picker" type="color" value="#FF0077"></span>
+        Hell<span id="panda-o" class="panda-o">
+          <span class="panda-o-letter">o</span>
+          <img
+            class="panda-o-gif"
+            src="images/ears.gif"
+            alt=""
+            aria-hidden="true">
+        </span>. I am Ruben<span id="accent-dot"><input id="accent-picker" type="color" value="#FF0077"></span>
       </h1>
+
 
       <!-- HIDDEN BADGE (PRESS & HOLD REVEAL FOR COUNTER) -->
       <div id="visit-badge" aria-live="polite" hidden>
@@ -70,6 +80,21 @@
         <span class="vb-sep">•</span>
         <span class="vb-label">Unique</span> <span id="vb-uniques">–</span>
       </div>
+
+
+      
+
+      <!-- Panda world -->
+      <div class="panda-world" id="panda-world" hidden>
+          <img
+              class="world-image"
+              src="images/aseprite/world/summer_day.png"
+              alt="Summer day pixel world">
+
+          <div class="panda-placeholder"></div>
+      </div>
+
+
 
 
       <div class="bottom-icons">
@@ -2818,6 +2843,135 @@ document.getElementById('accent-picker')?.addEventListener('input', e => {
   }, true);
 })();
 </script>
+
+
+
+
+
+
+
+
+
+// SCRIPT for Diorama reveal
+
+<script>
+(function(){
+
+  const pandaO = document.getElementById("panda-o");
+  const pandaWorld = document.getElementById("panda-world");
+
+  if(!pandaO || !pandaWorld) return;
+
+  const SESSION_KEY = "panda-world-revealed";
+
+  /*
+    TEST MODE:
+    true  = appears quickly for testing
+    false = production timing
+  */
+  const TEST_MODE = true;
+
+  const MIN_DELAY = TEST_MODE ? 3000 : 30000;
+  const MAX_DELAY = TEST_MODE ? 6000 : 60000;
+
+  /*
+    How long the panda-o remains clickable/visible.
+    Your GIF controls its own frame speed.
+  */
+  const ACTIVE_TIME = TEST_MODE ? 2200 : 3000;
+
+  let isActive = false;
+  let appearanceTimer = null;
+  let hideTimer = null;
+
+
+  /* -----------------------------------------
+     Check whether diorama was already unlocked
+     during this tab/session
+     ----------------------------------------- */
+
+  let alreadyRevealed = false;
+
+  try{
+    alreadyRevealed =
+      sessionStorage.getItem(SESSION_KEY) === "true";
+  }catch(e){}
+
+  if(alreadyRevealed){
+    pandaWorld.hidden = false;
+    return;
+  }
+
+  pandaWorld.hidden = true;
+
+
+  /* -----------------------------------------
+     Random appearance timing
+     ----------------------------------------- */
+
+  function randomDelay(){
+    return Math.floor(
+      Math.random() * (MAX_DELAY - MIN_DELAY + 1)
+    ) + MIN_DELAY;
+  }
+
+
+  function scheduleAppearance(){
+
+    appearanceTimer = setTimeout(() => {
+
+      isActive = true;
+      pandaO.classList.add("is-active");
+
+      hideTimer = setTimeout(() => {
+
+        isActive = false;
+        pandaO.classList.remove("is-active");
+
+        scheduleAppearance();
+
+      }, ACTIVE_TIME);
+
+    }, randomDelay());
+  }
+
+
+  /* -----------------------------------------
+     User discovers the Easter egg
+     ----------------------------------------- */
+
+  pandaO.addEventListener("click", () => {
+
+    if(!isActive) return;
+
+    clearTimeout(appearanceTimer);
+    clearTimeout(hideTimer);
+
+    isActive = false;
+    pandaO.classList.remove("is-active");
+
+    pandaWorld.hidden = false;
+
+    try{
+      sessionStorage.setItem(SESSION_KEY, "true");
+    }catch(e){}
+
+  });
+
+
+  scheduleAppearance();
+
+})();
+</script>
+
+
+
+
+
+
+
+
+
 
 
 <script>

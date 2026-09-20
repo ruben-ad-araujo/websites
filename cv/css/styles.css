@@ -66,6 +66,122 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 .hero{font-size:clamp(40px,7vw,64px);font-weight:700;margin:0;text-align:center}
 
 
+/* ===========================================
+   Hidden Panda "o" Easter Egg
+   =========================================== */
+
+.panda-o{
+    position:relative;
+    display:inline-block;
+    line-height:1;
+}
+
+.panda-o-letter{
+    visibility:visible;
+}
+
+.panda-o-gif{
+    position:absolute;
+    left:50%;
+    bottom:-0.04em;
+    transform:translateX(-50%);
+
+    width:0.95em;
+    height:0.95em;
+
+    object-fit:contain;
+    image-rendering:pixelated;
+
+    opacity:0;
+    pointer-events:none;
+    user-select:none;
+}
+
+.panda-o.is-active{
+    cursor:pointer;
+}
+
+.panda-o.is-active .panda-o-letter{
+    visibility:hidden;
+}
+
+.panda-o.is-active .panda-o-gif{
+    opacity:1;
+}
+
+
+
+
+/* ===========================================
+   Panda World (Viewport)
+   =========================================== */
+
+.panda-world{
+
+    width:min(88vw,666px);
+
+    aspect-ratio:4/1;
+
+    margin-top:40px;
+
+    border-radius:12px;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:#111;   /* shown only if the image fails to load */
+}
+
+
+/* ===========================================
+   Background World Image
+   =========================================== */
+
+.world-image{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    image-rendering:pixelated;
+
+    user-select:none;
+
+    pointer-events:none;
+}
+
+
+/* ===========================================
+   Panda Placeholder (temporary)
+   =========================================== */
+/*
+.panda-placeholder{
+
+    width:33px;
+
+    height:58px;
+
+    background:#ff0077;
+
+    position:absolute;
+
+    left:140px;
+
+    bottom:25px;
+
+    border-radius:4px;
+
+    z-index:10;
+}
+
+*/
 
 /* DROPDOWN MENU CODE STARTS HERE *//* DROPDOWN MENU CODE STARTS HERE *//* DROPDOWN MENU CODE STARTS HERE */
 /* ===== NAV BASE (centered) ===== */
