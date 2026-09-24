@@ -112,76 +112,449 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 
 
 
+
 /* ===========================================
-   Panda World (Viewport)
+   DIORAMA VIEW SELECTOR
    =========================================== */
 
-.panda-world{
+.diorama-selector[hidden],
+.panda-world[hidden]{
+    display:none !important;
+}
 
-    width:min(88vw,666px);
 
-    aspect-ratio:4/1;
-
-    margin-top:40px;
-
-    border-radius:12px;
-
+/* Small pixel-style choice panel shown after
+   clicking the animated panda "o". */
+.diorama-selector{
     position:relative;
 
-    overflow:hidden;
+    width:min(88vw,420px);
+    margin-top:32px;
+    padding:22px 20px 18px;
 
-    background:#111;   /* shown only if the image fails to load */
+    box-sizing:border-box;
+
+    background:#111;
+    color:#fff;
+
+    border:2px solid rgba(255,255,255,.22);
+    border-radius:4px;
+
+    box-shadow:
+        4px 4px 0 rgba(0,0,0,.55),
+        inset 0 0 0 1px rgba(255,255,255,.05);
+
+    font-family:
+        "Courier New",
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    text-align:center;
+
+    z-index:20;
+}
+
+
+.diorama-selector-title{
+    margin:0 34px 18px;
+
+    color:var(--accent);
+
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:2px;
+}
+
+
+/* Selector × */
+.diorama-selector-close{
+    position:absolute;
+    top:7px;
+    right:8px;
+
+    width:26px;
+    height:26px;
+
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:2px;
+
+    background:#181818;
+    color:#fff;
+
+    font-family:inherit;
+    font-size:17px;
+    line-height:20px;
+
+    cursor:pointer;
+}
+
+.diorama-selector-close:hover,
+.diorama-selector-close:focus{
+    color:var(--accent);
+    border-color:var(--accent);
+    outline:none;
+}
+
+
+/* Three viewing choices */
+.diorama-mode-button{
+    width:100%;
+    display:block;
+
+    margin:8px 0;
+    padding:11px 12px;
+
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:2px;
+
+    background:#171717;
+    color:#fff;
+
+    font-family:inherit;
+
+    cursor:pointer;
+
+    transition:
+        border-color .15s ease,
+        background .15s ease,
+        color .15s ease;
+}
+
+.diorama-mode-button:hover,
+.diorama-mode-button:focus{
+    border-color:var(--accent);
+    background:#1e1e1e;
+    outline:none;
+}
+
+
+.diorama-mode-name{
+    display:block;
+
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:1px;
+
+    color:#fff;
+}
+
+.diorama-mode-button:hover .diorama-mode-name,
+.diorama-mode-button:focus .diorama-mode-name{
+    color:var(--accent);
+}
+
+
+.diorama-mode-description{
+    display:block;
+
+    margin-top:4px;
+
+    font-size:10px;
+    letter-spacing:.4px;
+
+    color:#aaa;
 }
 
 
 /* ===========================================
-   Background World Image
+   DIORAMA CONTAINER
    =========================================== */
 
-.world-image{
+.panda-world{
+    position:relative;
 
+    margin-top:40px;
+
+    box-sizing:border-box;
+
+    background:#111;
+
+    border-radius:12px;
+
+    z-index:10;
+}
+
+
+/* × button used after a diorama has opened */
+.panda-world-close{
+    position:absolute;
+
+    top:8px;
+    right:8px;
+
+    width:30px;
+    height:30px;
+
+    padding:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid rgba(255,255,255,.42);
+    border-radius:3px;
+
+    background:rgba(10,10,10,.72);
+    color:#fff;
+
+    font-family:
+        "Courier New",
+        ui-monospace,
+        monospace;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    z-index:100;
+
+    backdrop-filter:blur(2px);
+}
+
+.panda-world-close:hover,
+.panda-world-close:focus{
+    color:var(--accent);
+    border-color:var(--accent);
+    outline:none;
+}
+
+
+/* ===========================================
+   CAMERA / VIEWPORT
+   =========================================== */
+
+.world-viewport{
+    position:relative;
+
+    width:100%;
+
+    overflow:hidden;
+
+    border-radius:12px;
+
+    background:#111;
+}
+
+
+/*
+   The stage is the complete original Aseprite
+   world coordinate system.
+
+   IMPORTANT:
+   All full-scene animation PNGs retain their
+   original 1600 × 400 size/alignment.
+*/
+.world-stage{
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    transform-origin:0 0;
+
+    overflow:visible;
+}
+
+
+/* Static image + full-canvas animated overlays */
+.world-layer{
     position:absolute;
 
     inset:0;
 
     width:100%;
-
     height:100%;
 
-    object-fit:cover;
+    object-fit:fill;
 
     image-rendering:pixelated;
 
     user-select:none;
-
     pointer-events:none;
 }
 
 
 /* ===========================================
-   Panda Placeholder (temporary)
+   WORLD LAYER ORDER
+
+   Back → front:
+
+   1. Static scenery
+   2. Moving clouds
+   3. Animated water
+   4. Fishing rod / ripple
+   5. Fire
+   6. Foreground edge trees
    =========================================== */
-/*
-.panda-placeholder{
 
-    width:33px;
-
-    height:58px;
-
-    background:#ff0077;
-
-    position:absolute;
-
-    left:140px;
-
-    bottom:25px;
-
-    border-radius:4px;
-
-    z-index:10;
+.world-static{
+    z-index:1;
 }
 
+.world-cloud{
+    z-index:2;
+}
+
+#summer-water{
+    z-index:3;
+}
+
+#summer-fishing-ripple{
+    z-index:4;
+}
+
+#summer-fire{
+    z-index:5;
+}
+
+.world-foreground-trees{
+    z-index:6;
+}
+
+
+/* ===========================================
+   CLOUDS
+   =========================================== */
+
+/*
+   Clouds are different from the other assets:
+
+   - they were exported tightly cropped
+   - JavaScript gives each cloud its own world
+     X/Y position, scale and speed
+   - therefore they are NOT fixed 1600 × 400
+     overlays
 */
+.world-cloud{
+    position:absolute;
+
+    display:block;
+
+    width:auto;
+    height:auto;
+
+    image-rendering:pixelated;
+
+    user-select:none;
+    pointer-events:none;
+
+}
+
+
+/* ===========================================
+   DIORAMA DISPLAY MODES
+   =========================================== */
+
+
+/* -------------------------------------------
+   1. MINIMAL
+
+   Entire 1600 × 400 world displayed in roughly
+   the same small strip used by the old website.
+   ------------------------------------------- */
+
+.panda-world.mode-minimal{
+    width:min(88vw,666px);
+}
+
+.panda-world.mode-minimal .world-viewport{
+    aspect-ratio:4 / 1;
+}
+
+.panda-world.mode-minimal .world-stage{
+    width:100%;
+    height:100%;
+}
+
+
+/* -------------------------------------------
+   2. VIEWPORT
+
+   Genuine 700 × 400 camera into the larger
+   1600 × 400 world.
+
+   JavaScript will position the world-stage so
+   the initial camera is centered near the
+   fishing panda.
+   ------------------------------------------- */
+
+.panda-world.mode-viewport{
+    width:min(88vw,700px);
+}
+
+.panda-world.mode-viewport .world-viewport{
+    aspect-ratio:7 / 4;
+}
+
+
+/*
+   1600 / 700 = 2.285714...
+
+   Therefore the complete world must be
+   228.5714% of the viewport width for a
+   700-pixel camera window to represent exactly
+   700 original world pixels.
+*/
+.panda-world.mode-viewport .world-stage{
+    width:228.5714%;
+    height:100%;
+}
+
+
+/* -------------------------------------------
+   3. COMPLETE
+
+   Whole landscape using most of the browser.
+   Native art is 1600 × 400, but CSS may scale
+   the pixels larger on big displays.
+   ------------------------------------------- */
+
+.panda-world.mode-complete{
+    width:min(96vw,2400px);
+}
+
+.panda-world.mode-complete .world-viewport{
+    aspect-ratio:4 / 1;
+}
+
+.panda-world.mode-complete .world-stage{
+    width:100%;
+    height:100%;
+}
+
+
+/* ===========================================
+   RESPONSIVE SAFETY
+   =========================================== */
+
+@media (max-width:720px){
+
+    .panda-world{
+        margin-top:28px;
+    }
+
+    .panda-world.mode-minimal,
+    .panda-world.mode-viewport{
+        width:92vw;
+    }
+
+    .panda-world.mode-complete{
+        width:96vw;
+    }
+
+    .diorama-selector{
+        width:90vw;
+        margin-top:26px;
+    }
+}
+
+
+
+
 
 /* DROPDOWN MENU CODE STARTS HERE *//* DROPDOWN MENU CODE STARTS HERE *//* DROPDOWN MENU CODE STARTS HERE */
 /* ===== NAV BASE (centered) ===== */
