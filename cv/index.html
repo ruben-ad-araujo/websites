@@ -82,16 +82,150 @@
       </div>
 
 
-      
 
-      <!-- Panda world -->
+
+
+      <!-- =========================================
+     DIORAMA VIEW MODE SELECTOR
+     ========================================= -->
+
+      <div class="diorama-selector" id="diorama-selector" hidden>
+
+        <button
+          class="diorama-selector-close"
+          id="diorama-selector-close"
+          type="button"
+          aria-label="Close diorama selector">
+          ×
+        </button>
+
+        <div class="diorama-selector-title">
+          VIEW DIORAMA
+        </div>
+
+        <button class="diorama-mode-button" type="button" data-diorama-mode="minimal">
+          <span class="diorama-mode-name">MINIMAL</span>
+          <span class="diorama-mode-description">
+            Small overview
+          </span>
+        </button>
+
+        <button class="diorama-mode-button" type="button" data-diorama-mode="viewport">
+          <span class="diorama-mode-name">VIEWPORT</span>
+          <span class="diorama-mode-description">
+            Closer camera view
+          </span>
+        </button>
+
+        <button class="diorama-mode-button" type="button" data-diorama-mode="complete">
+          <span class="diorama-mode-name">COMPLETE</span>
+          <span class="diorama-mode-description">
+            Full landscape
+          </span>
+        </button>
+
+      </div>
+
+
+      <!-- =========================================
+          PANDA DIORAMA
+          ========================================= -->
+
       <div class="panda-world" id="panda-world" hidden>
-          <img
-              class="world-image"
-              src="images/aseprite/world/summer_day.png"
-              alt="Summer day pixel world">
 
-          <div class="panda-placeholder"></div>
+        <button
+          class="panda-world-close"
+          id="panda-world-close"
+          type="button"
+          aria-label="Close diorama">
+          ×
+        </button>
+
+        <div class="world-viewport" id="world-viewport">
+
+          <div class="world-stage" id="world-stage">
+
+            <!-- STATIC BASE -->
+            <img
+              class="world-layer world-static"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_static.png"
+              alt="Summer day pixel-art campsite">
+
+            <!-- WATER -->
+            <img
+              class="world-layer world-animation"
+              id="summer-water"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_water_1.png"
+              alt=""
+              aria-hidden="true">
+
+            <!-- FISHING ROD / RIPPLE -->
+            <img
+              class="world-layer world-animation"
+              id="summer-fishing-ripple"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_fishing_ripple_rod_1.png"
+              alt=""
+              aria-hidden="true">
+
+            <!-- FIRE -->
+            <img
+              class="world-layer world-animation"
+              id="summer-fire"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_fire_1.png"
+              alt=""
+              aria-hidden="true">
+
+            <!-- CLOUDS -->
+            <img
+              class="world-cloud"
+              id="summer-cloud-1"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_cloud_1.png"
+              alt=""
+              aria-hidden="true">
+
+            <img
+              class="world-cloud"
+              id="summer-cloud-2"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_cloud_2.png"
+              alt=""
+              aria-hidden="true">
+
+            <img
+              class="world-cloud"
+              id="summer-cloud-3"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_cloud_3.png"
+              alt=""
+              aria-hidden="true">
+
+            <img
+              class="world-cloud"
+              id="summer-cloud-4"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_cloud_4.png"
+              alt=""
+              aria-hidden="true">
+
+            <img
+              class="world-cloud"
+              id="summer-cloud-5"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_cloud_5.png"
+              alt=""
+              aria-hidden="true">
+
+
+            <!-- FOREGROUND TREES
+                Full 1600 × 400 transparent overlay.
+                Kept above the clouds so clouds can pass
+                behind the two large edge trees. -->
+            <img
+              class="world-layer world-foreground-trees"
+              src="images/aseprite/aseprite_assets/individual_assets/summer_day/summer_day_foreground_trees.png"
+              alt=""
+              aria-hidden="true">
+
+          </div>
+
+        </div>
+
       </div>
 
 
@@ -2850,119 +2984,699 @@ document.getElementById('accent-picker')?.addEventListener('input', e => {
 
 
 
-
-
-// SCRIPT for Diorama reveal
+<!-- =========================================
+     PANDA DIORAMA CONTROLLER
+     ========================================= -->
 
 <script>
 (function(){
 
+  /* =========================================================
+     MAIN ELEMENTS
+     ========================================================= */
+
   const pandaO = document.getElementById("panda-o");
+
+  const selector = document.getElementById("diorama-selector");
+  const selectorClose = document.getElementById("diorama-selector-close");
+
   const pandaWorld = document.getElementById("panda-world");
+  const worldClose = document.getElementById("panda-world-close");
 
-  if(!pandaO || !pandaWorld) return;
+  const worldStage = document.getElementById("world-stage");
 
-  const SESSION_KEY = "panda-world-revealed";
+  const modeButtons = document.querySelectorAll("[data-diorama-mode]");
 
-  /*
-    TEST MODE:
-    true  = appears quickly for testing
-    false = production timing
-  */
-  const TEST_MODE = true;
-
-  const MIN_DELAY = TEST_MODE ? 3000 : 30000;
-  const MAX_DELAY = TEST_MODE ? 6000 : 60000;
-
-  /*
-    How long the panda-o remains clickable/visible.
-    Your GIF controls its own frame speed.
-  */
-  const ACTIVE_TIME = TEST_MODE ? 2200 : 3000;
-
-  let isActive = false;
-  let appearanceTimer = null;
-  let hideTimer = null;
-
-
-  /* -----------------------------------------
-     Check whether diorama was already unlocked
-     during this tab/session
-     ----------------------------------------- */
-
-  let alreadyRevealed = false;
-
-  try{
-    alreadyRevealed =
-      sessionStorage.getItem(SESSION_KEY) === "true";
-  }catch(e){}
-
-  if(alreadyRevealed){
-    pandaWorld.hidden = false;
+  if(
+    !pandaO ||
+    !selector ||
+    !pandaWorld ||
+    !worldStage
+  ){
     return;
   }
 
-  pandaWorld.hidden = true;
+
+  /* =========================================================
+     PANDA "O" EASTER-EGG TIMING
+     =========================================================
+
+     These values deliberately keep the fairly frequent timing
+     currently being used on the site.
+
+     The GIF controls its own internal frame timing.
+     JavaScript only controls when it appears.
+  */
+
+  const EAR_MIN_DELAY = 3000;
+  const EAR_MAX_DELAY = 6000;
+  const EAR_VISIBLE_TIME = 2200;
+
+  let earActive = false;
+  let earAppearTimer = null;
+  let earHideTimer = null;
 
 
-  /* -----------------------------------------
-     Random appearance timing
-     ----------------------------------------- */
+  function randomEarDelay(){
 
-  function randomDelay(){
     return Math.floor(
-      Math.random() * (MAX_DELAY - MIN_DELAY + 1)
-    ) + MIN_DELAY;
+      Math.random() *
+      (EAR_MAX_DELAY - EAR_MIN_DELAY + 1)
+    ) + EAR_MIN_DELAY;
+
   }
 
 
-  function scheduleAppearance(){
+  function stopEarTimers(){
 
-    appearanceTimer = setTimeout(() => {
+    clearTimeout(earAppearTimer);
+    clearTimeout(earHideTimer);
 
-      isActive = true;
+    earAppearTimer = null;
+    earHideTimer = null;
+
+    earActive = false;
+
+    pandaO.classList.remove("is-active");
+
+  }
+
+
+  function schedulePandaEars(){
+
+    stopEarTimers();
+
+    earAppearTimer = setTimeout(() => {
+
+      earActive = true;
       pandaO.classList.add("is-active");
 
-      hideTimer = setTimeout(() => {
 
-        isActive = false;
+      earHideTimer = setTimeout(() => {
+
+        earActive = false;
         pandaO.classList.remove("is-active");
 
-        scheduleAppearance();
+        schedulePandaEars();
 
-      }, ACTIVE_TIME);
+      }, EAR_VISIBLE_TIME);
 
-    }, randomDelay());
+
+    }, randomEarDelay());
+
   }
 
 
-  /* -----------------------------------------
-     User discovers the Easter egg
-     ----------------------------------------- */
+  /* =========================================================
+     OPEN VIEW SELECTOR
+     ========================================================= */
 
   pandaO.addEventListener("click", () => {
 
-    if(!isActive) return;
+    /*
+      Ignore clicks while the normal Montserrat "o"
+      is displayed.
 
-    clearTimeout(appearanceTimer);
-    clearTimeout(hideTimer);
+      The Easter egg is only clickable while the
+      animated panda-o is visible.
+    */
+    if(!earActive) return;
 
-    isActive = false;
-    pandaO.classList.remove("is-active");
+    stopEarTimers();
 
-    pandaWorld.hidden = false;
-
-    try{
-      sessionStorage.setItem(SESSION_KEY, "true");
-    }catch(e){}
+    pandaWorld.hidden = true;
+    selector.hidden = false;
 
   });
 
 
-  scheduleAppearance();
+  /* =========================================================
+     CLOSE VIEW SELECTOR
+     ========================================================= */
+
+  selectorClose?.addEventListener("click", () => {
+
+    selector.hidden = true;
+
+    schedulePandaEars();
+
+  });
+
+
+  /* =========================================================
+     DIORAMA MODES
+     ========================================================= */
+
+  const MODE_CLASSES = [
+    "mode-minimal",
+    "mode-viewport",
+    "mode-complete"
+  ];
+
+
+  function clearModes(){
+
+    MODE_CLASSES.forEach(className => {
+      pandaWorld.classList.remove(className);
+    });
+
+  }
+
+
+  function openDiorama(mode){
+
+    selector.hidden = true;
+
+    clearModes();
+
+    pandaWorld.classList.add("mode-" + mode);
+    pandaWorld.hidden = false;
+
+
+    /*
+      VIEWPORT CAMERA
+
+      World = 1600 × 400
+      Camera = 700 × 400
+
+      x = horizontal position of the LEFT edge of
+      the camera inside the 1600px world.
+
+      At the moment we keep the camera stationary
+      around the fishing panda.
+
+      Later, when panda movement exists, this same
+      value can simply follow the panda's X position.
+    */
+
+    if(mode === "viewport"){
+
+      const CAMERA_X = 650;
+
+      const worldPercent =
+        (CAMERA_X / 1600) * 100;
+
+      worldStage.style.transform =
+        `translateX(-${worldPercent}%)`;
+
+    }
+    else{
+
+      worldStage.style.transform = "none";
+
+    }
+
+  }
+
+
+  modeButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      const mode = button.dataset.dioramaMode;
+
+      if(
+        mode !== "minimal" &&
+        mode !== "viewport" &&
+        mode !== "complete"
+      ){
+        return;
+      }
+
+      openDiorama(mode);
+
+    });
+
+  });
+
+
+  /* =========================================================
+     CLOSE DIORAMA
+     ========================================================= */
+
+  worldClose?.addEventListener("click", () => {
+
+    pandaWorld.hidden = true;
+
+    clearModes();
+
+    worldStage.style.transform = "none";
+
+    schedulePandaEars();
+
+  });
+
+
+  /* =========================================================
+     FULL-CANVAS FRAME ANIMATIONS
+     =========================================================
+
+     HOW TO ADD FUTURE FRAME-BASED EFFECTS
+     -------------------------------------
+
+     Example: animated grass, wind streaks, leaves,
+     water spray, etc.
+
+     1. Draw the animation in Aseprite.
+
+     2. Keep the original 1600 × 400 canvas.
+
+     3. Hide/delete everything except that effect.
+
+     4. Export each animation frame as a transparent PNG.
+
+        example:
+
+        summer_day_grass_1.png
+        summer_day_grass_2.png
+        summer_day_grass_3.png
+        summer_day_grass_4.png
+
+     5. Add ONE <img> element to world-stage.
+
+     6. Add its configuration below.
+
+     The JavaScript will then swap its PNG frames
+     independently from every other animation.
+  */
+
+
+  const ASSET_ROOT =
+    "images/aseprite/aseprite_assets/individual_assets/summer_day/";
+
+
+  const FRAME_ANIMATIONS = [
+
+    {
+      element: document.getElementById("summer-fire"),
+
+      frames: [
+        ASSET_ROOT + "summer_day_fire_1.png",
+        ASSET_ROOT + "summer_day_fire_2.png",
+        ASSET_ROOT + "summer_day_fire_3.png",
+        ASSET_ROOT + "summer_day_fire_4.png"
+      ],
+
+      frameTime: 170
+    },
+
+
+    {
+      element: document.getElementById("summer-water"),
+
+      frames: [
+        ASSET_ROOT + "summer_day_water_1.png",
+        ASSET_ROOT + "summer_day_water_2.png",
+        ASSET_ROOT + "summer_day_water_3.png",
+        ASSET_ROOT + "summer_day_water_4.png"
+      ],
+
+      frameTime: 300
+    },
+
+
+    {
+      element:
+        document.getElementById("summer-fishing-ripple"),
+
+      frames: [
+        ASSET_ROOT + "summer_day_fishing_ripple_rod_1.png",
+        ASSET_ROOT + "summer_day_fishing_ripple_rod_2.png",
+        ASSET_ROOT + "summer_day_fishing_ripple_rod_3.png",
+        ASSET_ROOT + "summer_day_fishing_ripple_rod_4.png"
+      ],
+
+      frameTime: 380
+    }
+
+  ];
+
+
+  /* Preload animation frames */
+
+  FRAME_ANIMATIONS.forEach(animation => {
+
+    animation.frames.forEach(src => {
+
+      const image = new Image();
+      image.src = src;
+
+    });
+
+  });
+
+
+  /* Start each animation independently */
+
+  FRAME_ANIMATIONS.forEach(animation => {
+
+    if(!animation.element) return;
+
+    let frame = 0;
+
+    setInterval(() => {
+
+      frame =
+        (frame + 1) %
+        animation.frames.length;
+
+      animation.element.src =
+        animation.frames[frame];
+
+    }, animation.frameTime);
+
+  });
+
+
+  /* =========================================================
+     MOVING CLOUDS
+     =========================================================
+
+     Unlike fire/water/ripples, clouds were exported
+     tightly cropped.
+
+     They therefore behave as independent objects
+     moving through the 1600 × 400 world.
+
+     Each cloud has:
+
+       x      = world horizontal coordinate
+       y      = world vertical coordinate
+       speed  = pixels per second
+       scale  = relative size
+
+     This same system can later be reused for:
+
+       falling leaves
+       birds
+       drifting grass/debris
+       wind particles
+       insects
+       snow
+       etc.
+
+     Those effects should generally be exported as
+     tightly-cropped transparent PNGs, just like
+     the clouds.
+  */
+
+
+    /*
+    CLOUD SKY LANES
+
+    Three very close vertical lanes in original
+    1600 × 400 world coordinates.
+
+    Clouds never drift vertically while travelling.
+    When recycled they receive only ±2px of vertical
+    variation around their assigned lane.
+  */
+
+  const CLOUD_LANES = [
+    24,
+    32,
+    40
+  ];
+
+
+  const CLOUDS = [
+
+    {
+      element: document.getElementById("summer-cloud-1"),
+      x: 60,
+      lane: 1,
+      y: CLOUD_LANES[1],
+      speed: 5.00,
+      scale: 1.00
+    },
+
+    {
+      element: document.getElementById("summer-cloud-2"),
+      x: 390,
+      lane: 0,
+      y: CLOUD_LANES[0],
+      speed: 5.10,
+      scale: 0.82
+    },
+
+    {
+      element: document.getElementById("summer-cloud-3"),
+      x: 720,
+      lane: 2,
+      y: CLOUD_LANES[2],
+      speed: 4.95,
+      scale: 0.72
+    },
+
+    {
+      element: document.getElementById("summer-cloud-4"),
+      x: 1040,
+      lane: 1,
+      y: CLOUD_LANES[1],
+      speed: 5.05,
+      scale: 0.94
+    },
+
+    {
+      element: document.getElementById("summer-cloud-5"),
+      x: 1390,
+      lane: 0,
+      y: CLOUD_LANES[0],
+      speed: 5.00,
+      scale: 0.78
+    }
+
+  ];
+
+
+
+
+  /*
+    Convert original Aseprite world coordinates
+    into percentages of the responsive world-stage.
+
+    This means the exact same cloud configuration
+    works in Minimal, Viewport and Complete modes.
+  */
+
+  function positionCloud(cloud){
+
+    const img = cloud.element;
+
+    if(!img) return;
+
+
+    img.style.left =
+      ((cloud.x / 1600) * 100) + "%";
+
+    img.style.top =
+      ((cloud.y / 400) * 100) + "%";
+
+
+    /*
+      Convert the PNG's native width into a
+      percentage of the 1600px-wide world.
+
+      Scale is then applied on top.
+    */
+
+    if(img.naturalWidth){
+
+      const widthPercent =
+        (
+          img.naturalWidth *
+          cloud.scale /
+          1600
+        ) * 100;
+
+      img.style.width =
+        widthPercent + "%";
+
+    }
+
+  }
+
+
+  /*
+    Return the displayed width of a cloud in the
+    original 1600px world coordinate system.
+  */
+
+  function cloudWorldWidth(cloud){
+
+    if(
+      !cloud.element ||
+      !cloud.element.naturalWidth
+    ){
+      return 200;
+    }
+
+    return (
+      cloud.element.naturalWidth *
+      cloud.scale
+    );
+
+  }
+
+
+  /*
+    RECYCLE A CLOUD
+
+    Clouds travel from left → right.
+
+    Instead of every cloud reappearing at exactly
+    the same X coordinate, an exiting cloud is put
+    behind whichever cloud is currently furthest
+    to the left.
+
+    This restores spacing each cycle and prevents
+    gradual cloud bunching.
+  */
+
+  function respawnCloud(cloud){
+
+    const otherClouds =
+      CLOUDS.filter(other => other !== cloud);
+
+
+    const leftMostX =
+      Math.min(
+        ...otherClouds.map(other => other.x)
+      );
+
+
+    /*
+      Random spacing keeps the pattern from looking
+      mechanically identical every cycle.
+    */
+
+    const gap =
+      180 + Math.random() * 80;
+
+
+    cloud.x =
+      leftMostX -
+      cloudWorldWidth(cloud) -
+      gap;
+
+
+    /*
+      Stay in the assigned lane, but move vertically
+      by at most two original pixels on each cycle.
+    */
+
+    const verticalJitter =
+      Math.floor(Math.random() * 5) - 2;
+
+
+    cloud.y =
+      CLOUD_LANES[cloud.lane] +
+      verticalJitter;
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  CLOUDS.forEach(cloud => {
+
+    if(!cloud.element) return;
+
+
+    if(cloud.element.complete){
+
+      positionCloud(cloud);
+
+    }
+    else{
+
+      cloud.element.addEventListener(
+        "load",
+        () => positionCloud(cloud),
+        { once:true }
+      );
+
+    }
+
+  });
+
+
+  let previousCloudTime =
+    performance.now();
+
+
+  function animateClouds(currentTime){
+
+    const elapsedSeconds =
+      (currentTime - previousCloudTime) / 1000;
+
+    previousCloudTime =
+      currentTime;
+
+
+    CLOUDS.forEach(cloud => {
+
+      if(!cloud.element) return;
+
+
+      cloud.x +=
+        cloud.speed * elapsedSeconds;
+
+
+      /*
+        Once completely past the right edge of
+        the world, wrap to the left.
+
+        A little negative spacing prevents the
+        cloud from visibly popping immediately
+        at x = 0.
+      */
+
+
+      if(
+        cloud.x >
+        1600 + cloudWorldWidth(cloud)
+      ){
+
+        respawnCloud(cloud);
+
+      }
+
+
+      positionCloud(cloud);
+
+    });
+
+
+    requestAnimationFrame(animateClouds);
+
+  }
+
+
+  requestAnimationFrame(animateClouds);
+
+
+  /* =========================================================
+     INITIAL STATE
+     ========================================================= */
+
+  selector.hidden = true;
+  pandaWorld.hidden = true;
+
+  schedulePandaEars();
+
 
 })();
 </script>
+
 
 
 
