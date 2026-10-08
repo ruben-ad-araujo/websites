@@ -8,7 +8,7 @@
   <!-- Cache-busting version parameter:
      Forces browsers (especially Chrome) to reload updated CSS instead of using a stale cached copy.
      Increment the version whenever styles.css changes. -->
-  <link rel="stylesheet" href="css/styles.css?v=3">
+  <link rel="stylesheet" href="css/styles.css?v=4">
 </head>
 <body>
 
@@ -334,9 +334,22 @@
             </li>            
 
 
+
             <li><strong>Location:</strong> Portugal</li>
             <li><strong>Nationality:</strong> Portuguese</li>
-          </ul>
+            </ul>
+
+            <div class="cv-download-wrap">
+              <button
+                id="cv-download-open"
+                class="cv-download-button"
+                type="button"
+                aria-haspopup="dialog"
+                aria-controls="cv-download-modal">
+                Download CV
+              </button>
+            </div>
+
         </div>
 
         <div class="about-col">
@@ -423,7 +436,426 @@
     </div>
   </section>
 
+  <!-- =========================================
+      CV DOWNLOAD SELECTOR
+      ========================================= -->
 
+  <div
+    id="cv-download-modal"
+    class="cv-modal"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cv-modal-title">
+
+    <div class="cv-modal-backdrop" data-cv-close></div>
+
+    <div class="cv-modal-panel">
+
+      <button
+        id="cv-modal-close"
+        class="cv-modal-close"
+        type="button"
+        aria-label="Close CV selector">
+        ×
+      </button>
+
+      <div class="cv-modal-header" id="cv-modal-header">
+        <h2 id="cv-modal-title">Choose a CV</h2>
+        <p>
+          Select the version most relevant to your needs.
+        </p>
+      </div>
+
+
+
+      <div id="cv-choice-panel">
+      
+
+      <!-- SHORT CVs -->
+      <section class="cv-modal-section">
+
+        <div class="cv-modal-section-heading">
+          <h3>Short CVs</h3>
+          <span>1-page focused versions</span>
+        </div>
+
+        <div class="cv-option-grid">
+
+          <a
+            class="cv-option"
+            href="pdf/cvs/cv_short_biomedical_research.pdf"
+            download>
+            <span class="cv-option-title">
+              Biomedical &amp; Clinical Research
+            </span>
+            <span class="cv-option-description">
+              Clinical research, biomarkers, metabolomics, proteomics and critical care.
+            </span>
+            <span class="cv-option-action">
+              Download PDF
+            </span>
+          </a>
+
+
+          <a
+            class="cv-option"
+            href="pdf/cvs/cv_short_clinical_data_rwe_ai.pdf"
+            download>
+            <span class="cv-option-title">
+              Clinical Data, RWE &amp; AI
+            </span>
+            <span class="cv-option-description">
+              Clinical data analysis, machine learning, RWE workflows and AI-assisted analytics.
+            </span>
+            <span class="cv-option-action">
+              Download PDF
+            </span>
+          </a>
+
+
+          <a
+            class="cv-option"
+            href="pdf/cvs/cv_short_research_management.pdf"
+            download>
+            <span class="cv-option-title">
+              Research Management &amp; Infrastructure
+            </span>
+            <span class="cv-option-description">
+              Scientific coordination, research infrastructure, funding and multidisciplinary management.
+            </span>
+            <span class="cv-option-action">
+              Download PDF
+            </span>
+          </a>
+
+
+          <a
+            class="cv-option"
+            href="pdf/cvs/cv_short_technology_transfer_ip.pdf"
+            download>
+            <span class="cv-option-title">
+              Technology Transfer &amp; IP
+            </span>
+            <span class="cv-option-description">
+              Patents, commercialization, innovation strategy and research-to-market pathways.
+            </span>
+            <span class="cv-option-action">
+              Download PDF
+            </span>
+          </a>
+
+
+          <a
+            class="cv-option"
+            href="pdf/cvs/cv_short_quantitative_risk_analytics.pdf"
+            download>
+            <span class="cv-option-title">
+              Quantitative &amp; Risk Analytics
+            </span>
+            <span class="cv-option-description">
+              Quantitative analysis, statistical modelling, market and risk metrics.
+            </span>
+            <span class="cv-option-action">
+              Download PDF
+            </span>
+          </a>
+
+
+          <a
+            class="cv-option"
+            href="pdf/cvs/cv_short_science_communication.pdf"
+            download>
+            <span class="cv-option-title">
+              Science Communication &amp; Outreach
+            </span>
+            <span class="cv-option-description">
+              Scientific communication, events, workshops, outreach and stakeholder engagement.
+            </span>
+            <span class="cv-option-action">
+              Download PDF
+            </span>
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- EXTENDED CVs -->
+      <section class="cv-modal-section cv-modal-section-extended">
+
+        <div class="cv-modal-section-heading">
+          <h3>Extended CVs</h3>
+          <span>Detailed versions available upon request</span>
+        </div>
+
+        <div class="cv-option-grid cv-option-grid-extended">
+
+          <button
+            class="cv-option cv-option-locked"
+            type="button"
+            data-extended-cv="biomedical">
+
+            <span class="cv-option-title">
+              Extended CV — Biomedical &amp; Clinical Research
+            </span>
+
+            <span class="cv-option-description">
+              Detailed research record, publications, projects, innovation, teaching and scientific output.
+            </span>
+
+            <span class="cv-option-action">
+              Request access
+            </span>
+
+          </button>
+
+
+          <button
+            class="cv-option cv-option-locked"
+            type="button"
+            data-extended-cv="engineering">
+
+            <span class="cv-option-title">
+              Extended CV — Engineering &amp; Industry
+            </span>
+
+            <span class="cv-option-description">
+              Detailed engineering career, technical tools, standards, certifications and industrial experience.
+            </span>
+
+            <span class="cv-option-action">
+              Request access
+            </span>
+
+          </button>
+
+        </div>
+
+    </div>
+
+
+
+        <!-- =========================================
+            EXTENDED CV REQUEST FORM
+            Initially hidden.
+            JavaScript fills the requested CV depending
+            on which "Request access" button was clicked.
+            ========================================= -->
+
+        <div
+          id="cv-request-panel"
+          class="cv-request-panel"
+          hidden>
+
+          <div class="cv-request-header">
+            <h3>Request Extended CV</h3>
+            <p>
+              Please provide your contact details and reason for requesting the extended CV.
+              Requests are reviewed manually.
+            </p>
+          </div>
+
+          <form id="cv-request-form">
+
+            <!-- Requested CV is shown to the user,
+                while the hidden value is what will
+                eventually be sent to the Worker. -->
+            <div class="cv-form-field">
+
+              <label for="cv-requested-display">
+                Requested CV
+              </label>
+
+              <input
+                id="cv-requested-display"
+                type="text"
+                readonly>
+
+              <input
+                id="cv-requested-value"
+                name="requestedCv"
+                type="hidden">
+
+            </div>
+
+
+            <div class="cv-form-field">
+
+              <label for="cv-request-name">
+                Name <span aria-hidden="true">*</span>
+              </label>
+
+              <input
+                id="cv-request-name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                maxlength="120"
+                required>
+
+            </div>
+
+
+            <div class="cv-form-field">
+
+              <label for="cv-request-reason">
+                Reason for request <span aria-hidden="true">*</span>
+              </label>
+
+              <select
+                id="cv-request-reason"
+                name="reason"
+                required>
+
+                <option value="" selected disabled>
+                  Select a reason
+                </option>
+
+                <option value="recruitment">
+                  Recruitment / employment
+                </option>
+
+                <option value="research-collaboration">
+                  Research collaboration
+                </option>
+
+                <option value="technology-transfer">
+                  Technology transfer / innovation
+                </option>
+
+                <option value="professional-networking">
+                  Professional networking
+                </option>
+
+                <option value="other">
+                  Other
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="cv-form-row">
+
+              <div class="cv-form-field">
+
+                <label for="cv-request-email">
+                  Email <span aria-hidden="true">*</span>
+                </label>
+
+                <input
+                  id="cv-request-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  maxlength="254"
+                  required>
+
+              </div>
+
+
+              <div class="cv-form-field">
+
+                <label for="cv-request-mobile">
+                  Mobile phone <span aria-hidden="true">*</span>
+                </label>
+
+                <input
+                  id="cv-request-mobile"
+                  name="mobile"
+                  type="tel"
+                  autocomplete="tel"
+                  maxlength="30"
+                  placeholder="+351 ..."
+                  required>
+
+                <span class="cv-form-help">
+                  Please provide a mobile number, not a fixed-line number.
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="cv-form-field">
+
+              <label for="cv-request-message">
+                Message
+                <span class="cv-form-optional">(optional)</span>
+              </label>
+
+              <textarea
+                id="cv-request-message"
+                name="message"
+                rows="4"
+                maxlength="1000"
+                placeholder="Optional context about your request."></textarea>
+
+            </div>
+
+
+
+            <!-- =========================================
+                CLOUDFLARE TURNSTILE
+
+                The verification widget is loaded only when
+                a visitor opens the extended-CV request form.
+
+                JavaScript renders the widget here.
+                The verification token is sent to our Worker,
+                which validates it before sending an email.
+                ========================================= -->
+
+            <div class="cv-turnstile-wrap">
+              <div id="cv-turnstile"></div>
+            </div>
+
+
+
+
+
+            <div
+              id="cv-request-status"
+              class="cv-request-status"
+              hidden
+              aria-live="polite">
+            </div>
+
+
+            <div class="cv-form-actions">
+
+              <button
+                id="cv-request-cancel"
+                class="cv-form-secondary"
+                type="button">
+                Back
+              </button>
+
+              <button
+                class="cv-form-submit"
+                type="submit">
+                Send request
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+
+      </section>
+
+    </div>
+
+  </div>
+
+
+  
   <!-- RESUME -->
   <section id="resume" class="grey-section section">
     <div class="section-inner">
@@ -3736,24 +4168,538 @@ document.getElementById('accent-picker')?.addEventListener('input', e => {
 </script>
 
 
+<!-- =========================================
+     CV DOWNLOAD / REQUEST MODAL
+     ========================================= -->
+
+<script>
+(function(){
+
+  /* =========================================================
+     MAIN ELEMENTS
+     ========================================================= */
+
+  const openButton =
+    document.getElementById('cv-download-open');
+
+  const modal =
+    document.getElementById('cv-download-modal');
+
+  const closeButton =
+    document.getElementById('cv-modal-close');
+
+  const modalHeader =
+    document.getElementById('cv-modal-header');
+
+  const choicePanel =
+    document.getElementById('cv-choice-panel');
+
+  const requestPanel =
+    document.getElementById('cv-request-panel');
+
+  const requestForm =
+    document.getElementById('cv-request-form');
+
+  const requestedDisplay =
+    document.getElementById('cv-requested-display');
+
+  const requestedValue =
+    document.getElementById('cv-requested-value');
+
+  const requestStatus =
+    document.getElementById('cv-request-status');
+
+  const requestCancel =
+    document.getElementById('cv-request-cancel');
+
+
+  /* =========================================================
+    CV REQUEST — CLOUDFLARE CONFIGURATION
+
+    WORKER_URL:
+    The endpoint responsible for validating and
+    emailing extended-CV requests.
+
+    TURNSTILE_SITE_KEY:
+    Public key from Cloudflare Turnstile.
+    NEVER put the Secret Key in this file.
+
+    The Turnstile script is loaded on demand,
+    avoiding unnecessary initial page loading.
+    ========================================================= */
+
+  const CV_REQUEST_WORKER =
+    'https://rubenaraujo.org/api/cv-request';
+
+  // Replace the value below with YOUR Turnstile Site Key.
+  // This is the PUBLIC Site Key, not TURNSTILE_SECRET.
+  const CV_TURNSTILE_SITE_KEY =
+    '0x4AAAAAAFRanmqHpETfwdWh';
+
+  let turnstileWidgetId = null;
+  let turnstileLoading = false;
+  let requestSending = false;
+
+  const requestSubmit =
+    requestForm.querySelector('.cv-form-submit');
+
+
+  function prepareCvTurnstile(){
+
+    if(requestPanel.hidden || turnstileWidgetId !== null){
+      return;
+    }
+
+    if(window.turnstile){
+
+      turnstileWidgetId = window.turnstile.render(
+        '#cv-turnstile',
+        {
+          sitekey: CV_TURNSTILE_SITE_KEY,
+          theme: 'light'
+        }
+      );
+
+      return;
+    }
+
+    if(turnstileLoading) return;
+
+    turnstileLoading = true;
+
+    const script = document.createElement('script');
+
+    script.src =
+      'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
+    script.async = true;
+
+    script.onload = () => {
+      turnstileLoading = false;
+      prepareCvTurnstile();
+    };
+
+    script.onerror = () => {
+
+      turnstileLoading = false;
+
+      if(requestStatus && !requestPanel.hidden){
+        requestStatus.textContent =
+          'Could not load security verification. Please check your connection.';
+        requestStatus.hidden = false;
+      }
+
+    };
+
+    document.head.appendChild(script);
+  }
+
+
+  function resetCvTurnstile(){
+
+    if(
+      turnstileWidgetId !== null &&
+      window.turnstile
+    ){
+      window.turnstile.reset(turnstileWidgetId);
+    }
+
+  }
+
+
+    
+
+  if(
+    !openButton ||
+    !modal ||
+    !closeButton ||
+    !choicePanel ||
+    !requestPanel ||
+    !requestForm
+  ){
+    return;
+  }
+
+
+  let lastFocusedElement = null;
+
+
+  /* =========================================================
+     EXTENDED CV DEFINITIONS
+
+     The public-facing title and internal identifier
+     live here.
+
+     Later the internal identifier is what the
+     Cloudflare Worker will receive.
+     ========================================================= */
+
+  const EXTENDED_CVS = {
+
+    biomedical: {
+      id: 'biomedical',
+      title:
+        'Extended CV — Biomedical & Clinical Research'
+    },
+
+    engineering: {
+      id: 'engineering',
+      title:
+        'Extended CV — Engineering & Industry'
+    }
+
+  };
+
+
+  /* =========================================================
+     VIEW HELPERS
+     ========================================================= */
+
+
+  function showChoices(){
+
+    if(modalHeader){
+      modalHeader.hidden = false;
+    }
+
+    choicePanel.hidden = false;
+    requestPanel.hidden = true;
+
+    if(requestStatus){
+      requestStatus.hidden = true;
+      requestStatus.textContent = '';
+    }
+
+  }
+
+
+  function showRequestForm(cvKey){
+
+    const cv =
+      EXTENDED_CVS[cvKey];
+
+    if(!cv) return;
+
+    if(modalHeader){
+      modalHeader.hidden = true;
+    }
+  
+    choicePanel.hidden = true;
+    requestPanel.hidden = false;
+
+
+    // Render security verification now that the
+    // request form is visible.
+    prepareCvTurnstile();
+
+    if(requestSubmit){
+      requestSubmit.disabled = false;
+      requestSubmit.textContent = 'Send request';
+    }
+
+
+    if(requestedDisplay){
+      requestedDisplay.value =
+        cv.title;
+    }
+
+
+    if(requestedValue){
+      requestedValue.value =
+        cv.id;
+    }
+
+
+    if(requestStatus){
+      requestStatus.hidden = true;
+      requestStatus.textContent = '';
+    }
+
+
+    /*
+      Put keyboard focus directly into the first
+      editable field.
+    */
+
+    document
+      .getElementById('cv-request-name')
+      ?.focus();
+
+  }
+
+
+  /* =========================================================
+     OPEN / CLOSE MODAL
+     ========================================================= */
+
+  function openModal(){
+
+    lastFocusedElement =
+      document.activeElement;
+
+    showChoices();
+
+    modal.hidden = false;
+
+    document.body.classList.add(
+      'cv-modal-open'
+    );
+
+    closeButton.focus();
+
+  }
+
+
+  function closeModal(){
+
+    modal.hidden = true;
+
+    document.body.classList.remove(
+      'cv-modal-open'
+    );
+
+
+    /*
+      Reset the form completely when the whole
+      modal closes.
+    */
+
+    requestForm.reset();
+    resetCvTurnstile();
+
+    if(requestedDisplay){
+      requestedDisplay.value = '';
+    }
+
+    if(requestedValue){
+      requestedValue.value = '';
+    }
+
+    showChoices();
+
+
+    if(
+      lastFocusedElement &&
+      typeof lastFocusedElement.focus === 'function'
+    ){
+      lastFocusedElement.focus();
+    }
+
+  }
+
+
+  openButton.addEventListener(
+    'click',
+    openModal
+  );
+
+
+  closeButton.addEventListener(
+    'click',
+    closeModal
+  );
+
+
+  modal
+    .querySelectorAll('[data-cv-close]')
+    .forEach(element => {
+
+      element.addEventListener(
+        'click',
+        closeModal
+      );
+
+    });
+
+
+  /* =========================================================
+     EXTENDED CV CHOICE
+     ========================================================= */
+
+  modal
+    .querySelectorAll('[data-extended-cv]')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          showRequestForm(
+            button.dataset.extendedCv
+          );
+
+        }
+      );
+
+    });
+
+
+  /* =========================================================
+     BACK TO CV CHOICES
+     ========================================================= */
+
+  requestCancel?.addEventListener(
+    'click',
+    () => {
+
+      requestForm.reset();
+      resetCvTurnstile();
+      showChoices();
+
+    }
+  );
+
+
+  /* =========================================================
+    EXTENDED CV REQUEST — LIVE SUBMISSION
+
+    Flow:
+    1. Browser validates mandatory form fields.
+    2. Turnstile produces a verification token.
+    3. Data and token are submitted to Cloudflare.
+    4. Worker verifies token and validates fields.
+    5. Worker sends a notification to Gmail.
+    6. This form displays the real result.
+
+    No CV files are transferred automatically.
+    ========================================================= */
+
+  requestForm.addEventListener(
+    'submit',
+    async event => {
+
+      event.preventDefault();
+
+      // Prevent multiple simultaneous submissions.
+      if(requestSending) return;
+
+      if(turnstileWidgetId === null || !window.turnstile){
+
+        requestStatus.textContent =
+          'Security verification is still loading. Please wait.';
+
+        requestStatus.hidden = false;
+        return;
+      }
+
+      const token =
+        window.turnstile.getResponse(turnstileWidgetId);
+
+      if(!token){
+
+        requestStatus.textContent =
+          'Please complete the security verification.';
+
+        requestStatus.hidden = false;
+        return;
+      }
+
+      const formData = new FormData(requestForm);
+
+      const data = {
+        requestedCv: formData.get('requestedCv'),
+        name: formData.get('name'),
+        reason: formData.get('reason'),
+        email: formData.get('email'),
+        mobile: formData.get('mobile'),
+        message: formData.get('message') || '',
+        turnstileToken: token
+      };
+
+      requestSending = true;
+
+      if(requestSubmit){
+        requestSubmit.disabled = true;
+        requestSubmit.textContent = 'Sending...';
+      }
+
+      requestStatus.textContent =
+        'Sending your request...';
+
+      requestStatus.hidden = false;
+
+      let delivered = false;
+
+      try {
+
+        const response = await fetch(
+          CV_REQUEST_WORKER,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          }
+        );
+
+        const result = await response.json();
+
+        if(!response.ok || result.success !== true){
+          throw new Error(
+            result.error || 'Unable to submit your request.'
+          );
+        }
+
+        delivered = true;
+
+        requestStatus.textContent =
+          'Your request was sent successfully. ' +
+          'It will be reviewed manually.';
+
+      } catch(error){
+
+        requestStatus.textContent =
+          error.message ||
+          'Could not send your request. Please try again.';
+
+        // Turnstile tokens are single-use.
+        // Obtain a fresh token before retrying.
+        resetCvTurnstile();
+
+      } finally {
+
+        requestSending = false;
+
+        if(requestSubmit){
+
+          requestSubmit.disabled = delivered;
+
+          requestSubmit.textContent = delivered
+            ? 'Request sent'
+            : 'Send request';
+
+        }
+
+      }
+
+    }
+  );
 
 
 
 
+  /* =========================================================
+     ESCAPE KEY
+     ========================================================= */
+
+  document.addEventListener(
+    'keydown',
+    event => {
+
+      if(
+        event.key === 'Escape' &&
+        !modal.hidden
+      ){
+        closeModal();
+      }
+
+    }
+  );
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+})();
+</script>
 
 </body>
 </html>

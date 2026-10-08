@@ -818,6 +818,635 @@ html,body{margin:0;padding:0;scroll-behavior:smooth;font-family:'Montserrat',san
 }
 
 
+/* ===========================================
+   CV DOWNLOAD BUTTON
+   =========================================== */
+
+.cv-download-wrap{
+  margin-top:18px;
+}
+
+.cv-download-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:9px 16px;
+
+  border:2px solid var(--accent);
+  border-radius:6px;
+
+  background:transparent;
+  color:var(--accent);
+
+  font-family:'Montserrat',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.3px;
+
+  cursor:pointer;
+
+  transition:
+    background .15s ease,
+    color .15s ease,
+    transform .15s ease;
+}
+
+.cv-download-button:hover,
+.cv-download-button:focus{
+  background:var(--accent);
+  color:#fff;
+  outline:none;
+  transform:translateY(-1px);
+}
+
+
+/* ===========================================
+   CV DOWNLOAD MODAL
+   =========================================== */
+
+.cv-modal[hidden]{
+  display:none !important;
+}
+
+.cv-modal{
+  position:fixed;
+  inset:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:24px;
+
+  box-sizing:border-box;
+
+  z-index:5000;
+}
+
+.cv-modal-backdrop{
+  position:absolute;
+  inset:0;
+
+  background:rgba(0,0,0,.68);
+
+  backdrop-filter:blur(4px);
+}
+
+.cv-modal-panel{
+  position:relative;
+
+  width:min(960px,94vw);
+  max-height:88vh;
+
+  overflow-y:auto;
+
+  box-sizing:border-box;
+
+  padding:30px;
+
+  background:#fff;
+  color:#111;
+
+  border-radius:12px;
+
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.35);
+
+  z-index:1;
+}
+
+.cv-modal-close{
+  position:absolute;
+
+  top:12px;
+  right:14px;
+
+  width:32px;
+  height:32px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:0;
+
+  border:1px solid #ccc;
+  border-radius:6px;
+
+  background:#fff;
+  color:#222;
+
+  font-size:20px;
+
+  cursor:pointer;
+
+  transition:
+    color .15s ease,
+    border-color .15s ease,
+    background .15s ease;
+}
+
+.cv-modal-close:hover,
+.cv-modal-close:focus{
+  color:var(--accent);
+  border-color:var(--accent);
+  background:#fafafa;
+  outline:none;
+}
+
+.cv-modal-header{
+  padding-right:42px;
+  margin-bottom:26px;
+}
+
+.cv-modal-header h2{
+  margin:0 0 6px;
+
+  font-size:28px;
+  color:var(--accent);
+}
+
+.cv-modal-header p{
+  margin:0;
+
+  font-size:14px;
+  color:#555;
+}
+
+.cv-modal-section + .cv-modal-section{
+  margin-top:30px;
+  padding-top:26px;
+
+  border-top:1px solid #ddd;
+}
+
+.cv-modal-section-heading{
+  margin-bottom:14px;
+}
+
+.cv-modal-section-heading h3{
+  margin:0 0 4px;
+
+  font-size:18px;
+}
+
+.cv-modal-section-heading span{
+  font-size:12px;
+  color:#777;
+}
+
+.cv-option-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:12px;
+}
+
+.cv-option{
+  display:flex;
+  flex-direction:column;
+
+  min-height:116px;
+
+  box-sizing:border-box;
+
+  padding:16px;
+
+  border:1px solid #d7d7d7;
+  border-radius:8px;
+
+  background:#fafafa;
+  color:#111;
+
+  text-align:left;
+  text-decoration:none;
+
+  font-family:'Montserrat',sans-serif;
+
+  cursor:pointer;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease,
+    transform .15s ease,
+    background .15s ease;
+}
+
+.cv-option:hover,
+.cv-option:focus{
+  border-color:var(--accent);
+
+  box-shadow:
+    0 5px 16px rgba(0,0,0,.08);
+
+  transform:translateY(-1px);
+
+  background:#fff;
+
+  outline:none;
+}
+
+.cv-option-title{
+  display:block;
+
+  margin-bottom:7px;
+
+  font-size:14px;
+  font-weight:700;
+}
+
+.cv-option-description{
+  display:block;
+
+  flex:1;
+
+  font-size:11px;
+  line-height:1.5;
+
+  color:#666;
+}
+
+.cv-option-action{
+  display:block;
+
+  margin-top:12px;
+
+  font-size:11px;
+  font-weight:700;
+
+  color:var(--accent);
+}
+
+.cv-option-locked{
+  width:100%;
+}
+
+.cv-option-locked .cv-option-action::before{
+  content:"🔒 ";
+}
+
+.cv-request-message{
+  margin:16px 0 0;
+
+  padding:12px 14px;
+
+  border-left:3px solid var(--accent);
+
+  background:#f7f7f7;
+
+  font-size:12px;
+  line-height:1.5;
+
+  color:#444;
+}
+
+
+/* Prevent page scrolling while modal is open */
+body.cv-modal-open{
+  overflow:hidden;
+}
+
+
+/* ===========================================
+   CV MODAL — MOBILE
+   =========================================== */
+
+@media (max-width:720px){
+
+  .cv-modal{
+    padding:14px;
+  }
+
+  .cv-modal-panel{
+    width:100%;
+    max-height:92vh;
+
+    padding:24px 18px;
+  }
+
+  .cv-option-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cv-modal-header h2{
+    font-size:24px;
+  }
+
+  .cv-option{
+    min-height:auto;
+  }
+
+}
+
+
+/* ===========================================
+   EXTENDED CV REQUEST FORM
+   =========================================== */
+
+.cv-request-panel[hidden]{
+  display:none !important;
+}
+
+.cv-request-panel{
+  margin-top:4px;
+}
+
+.cv-request-header{
+  margin-bottom:22px;
+}
+
+.cv-request-header h3{
+  margin:0 0 7px;
+
+  font-size:22px;
+  color:var(--accent);
+}
+
+.cv-request-header p{
+  margin:0;
+
+  max-width:700px;
+
+  font-size:12px;
+  line-height:1.55;
+
+  color:#666;
+}
+
+
+/* Individual form field */
+
+.cv-form-field{
+  display:flex;
+  flex-direction:column;
+
+  margin-bottom:16px;
+}
+
+.cv-form-field label{
+  margin-bottom:6px;
+
+  font-size:12px;
+  font-weight:700;
+
+  color:#222;
+}
+
+.cv-form-field label > span:not(.cv-form-optional){
+  color:var(--accent);
+}
+
+.cv-form-optional{
+  font-weight:400;
+  color:#888;
+}
+
+
+/* Inputs / select / textarea */
+
+.cv-form-field input,
+.cv-form-field select,
+.cv-form-field textarea{
+  width:100%;
+
+  box-sizing:border-box;
+
+  padding:10px 11px;
+
+  border:1px solid #ccc;
+  border-radius:6px;
+
+  background:#fff;
+  color:#111;
+
+  font-family:'Montserrat',sans-serif;
+  font-size:12px;
+
+  outline:none;
+
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+.cv-form-field input:focus,
+.cv-form-field select:focus,
+.cv-form-field textarea:focus{
+  border-color:var(--accent);
+
+  box-shadow:
+    0 0 0 3px
+    color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+
+/* Read-only selected CV */
+
+#cv-requested-display{
+  background:#f5f5f5;
+  color:#555;
+
+  cursor:default;
+}
+
+
+/* Text area */
+
+.cv-form-field textarea{
+  resize:vertical;
+
+  min-height:90px;
+  max-height:220px;
+}
+
+
+/* Email + mobile side by side */
+
+.cv-form-row{
+  display:grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap:14px;
+}
+
+
+/* Helper text */
+
+.cv-form-help{
+  display:block;
+
+  margin-top:5px;
+
+  font-size:10px;
+  line-height:1.4;
+
+  color:#777;
+}
+
+
+/* Status / temporary success or error */
+
+.cv-request-status{
+  margin:4px 0 16px;
+
+  padding:10px 12px;
+
+  border-left:3px solid var(--accent);
+
+  background:#f6f6f6;
+
+  font-size:11px;
+  line-height:1.5;
+
+  color:#444;
+}
+
+
+/* Form buttons */
+
+.cv-form-actions{
+  display:flex;
+  justify-content:flex-end;
+
+  gap:10px;
+
+  margin-top:6px;
+}
+
+.cv-form-secondary,
+.cv-form-submit{
+  padding:9px 15px;
+
+  border-radius:6px;
+
+  font-family:'Montserrat',sans-serif;
+  font-size:12px;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:
+    background .15s ease,
+    color .15s ease,
+    border-color .15s ease;
+}
+
+
+.cv-form-secondary{
+  border:1px solid #bbb;
+
+  background:#fff;
+  color:#444;
+}
+
+.cv-form-secondary:hover,
+.cv-form-secondary:focus{
+  border-color:#777;
+  color:#111;
+
+  outline:none;
+}
+
+
+.cv-form-submit{
+  border:2px solid var(--accent);
+
+  background:var(--accent);
+  color:#fff;
+}
+
+.cv-form-submit:hover,
+.cv-form-submit:focus{
+  background:transparent;
+  color:var(--accent);
+
+  outline:none;
+}
+
+
+/* ===========================================
+   REQUEST FORM — MOBILE
+   =========================================== */
+
+@media (max-width:720px){
+
+  .cv-form-row{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+
+  .cv-form-actions{
+    flex-direction:column-reverse;
+  }
+
+  .cv-form-secondary,
+  .cv-form-submit{
+    width:100%;
+  }
+
+}
+
+
+
+/* ===========================================
+   CLOUDFLARE TURNSTILE — CV REQUEST FORM
+
+   Verification is centered beneath the message
+   field and above the status/submission buttons.
+   =========================================== */
+
+.cv-turnstile-wrap{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    margin:18px 0 16px;
+    min-height:65px;
+}
+
+/* Prevent oversized content on narrow screens */
+#cv-turnstile{
+    max-width:100%;
+}
+
+/* Feedback while a request is being sent */
+.cv-form-submit:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+    transform:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ===== ABOUT: typography, spacing, skills ===== */
